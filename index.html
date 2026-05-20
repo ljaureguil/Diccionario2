@@ -1,8 +1,393 @@
+
 <style>
-  
+    button{
+        background: #0088ff;
+        color: #fff;
+        border: none;
+        margin: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    input{
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        margin:5px;
+    }
+    #todo {
+        text-align:center;
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        background: #eee;
+        margin:20px;
+    }
+
+    #container {
+        box-shadow: rgba(100, 100, 111, 0.6) -7px 7px 20px 0px;
+        border-radius: 5px;
+        padding: 5px;
+        text-align: center;
+        position: absolute;
+        position: absolute;
+        top: 50%;
+        left: 5%;
+        width: 60%;
+        height: 55%;
+        background: #0088ff;
+        cursor: move;
+        z-index: 100;
+        font-size: 12px;
+        font-weight: bold;
+        transform: scale(.5);
+    }
 </style>
-<div id="todo"></div>
+
+<div id="todo">
+
+<br>
+    ..........................
+    <select id='sel' style='width:80%;' oninput='find(this.value)'></select>
+    <button onclick='delw(sel.value)' style='width:auto;'>Del</button>
+    .................
+
+    <br>
+
+    <br><button onclick='aud.play()' style='font-size:10px;'>Play mp3</button>
+    <button onclick='playtx(sel.value)' style='font-size:10px;'>Play TxTo Speech</button><br>
+    Add new Word . . . <input id='inw'></input> <button onclick='addNewW(inw.value)' style='width:auto;'>Add it</button> 
+    <button onclick='find(inw.value)' style='width:auto;'>Find it</button><br>
+    from<input type="number" oninput="if(this.value<=ar.length) from=this.value;else alert('too high')"></input>
+    <br>to<input type="number" oninput="if(this.value>to && this.value<ar.length) to=this.value;else alert('number to hi or les than from number');"></input>;
+    <br><button onclick="setArTest()">Set Up test</button>
+
+    <br><br>
+
+    .........................
+
+
+    <textarea id='textarea' style='width:90%;height:40%;font-size:10px;'></textarea>
+
+    <audio id="aud" click="this.play()" onload="this.pause();this.currentTime = 0;" src="https://www.pacdv.com/sounds/applause-sound/app-15.mp3" type="audio/mp3" autoplay style="display:block;"></audio>
+    <br><br>
+    <br><br>
+
+
+    <button onclick="convert()">Convert words to obf</button>
+
+</div>
+
+
 
 <script>
-  var a=9
+    var words = [];
+    sel = document.getElementById("sel");
+    //Libro ***https://www.gutenberg.org/files/46399/46399-h/46399-h.htm
+    var linkdicc = 'https://api.jsonblob.com/019e1d07-485a-7032-9548-bf468ae017f4'
+    var linkapi = "https://api.dictionaryapi.dev/api/v2/entries/en/"
+    var linklib = "https://raw.githubusercontent.com/ljaureguil/My-Library/refs/heads/master/MyLibmin.js";
+    var link = "https://api.jsonblob.com/019b7f1f-ed12-77d2-b6db-8bd01fcb81ea"; //https://api.jsonblob.com/019b5163-39dc-74c4-b292-6655ebb3cf98"
+    //var GetJson,UpdateJson;
+
+    loadDoc = function(url, callback) {
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("GET", url, false);
+        xhttp.send();
+        if (callback != undefined) callback(xhttp.responseText);
+        return xhttp.responseText;
+    }
+    loadDoc(linklib, function(r) {
+        var s = document.createElement("script");
+        s.innerHTML = r;
+        document.body.appendChild(s)
+
+        ;
+        inic()
+    });
+
+    //eval(r);GetJson=GetJson;UpdateJson=UpdateJson;alert("ok")
+
+    var linkd = "https://api.jsonblob.com/019a741c-2015-743a-a642-933fc22eeab7"
+
+    var obd, words = [];
+
+
+    function inic() {
+
+        var linkd = "https://api.jsonblob.com/019a741c-2015-743a-a642-933fc22eeab7"
+
+        GetJson(linkd, function(r) {
+            obd = r;
+            words = `leasure,dwell,endeavour,remonstrance,acquainted,obliging,ought,wit,dejected,puzzled,dared,agreeable,undeviating,remissness,rigour,fondness,panegyric,flattery,`;
+            var wl = localStorage.getItem("diccionario")
+            if (wl === null) localStorage.setItem("diccionario", words);
+            else words = wl;
+            ar = obd;
+            var s = ar[1];
+            var ff = find(s);
+            setTimeout(function() {
+                setUpSel(ar);
+            }, 1500);
+            GetJson(linkdicc, function(r) {
+                words = r.words;
+
+
+            }, 3500);
+
+        })
+
+    }
+
+    function convert() {
+        alert(obd);
+
+        var obw = {};
+        for (var i = 0; i < obd.length; i++) {
+            var w = obd[i];
+            //  alert(w);
+            GetJson(linkapi + w, function(r) {
+                //  if(confirm("do the next")){
+                if (r[0] != null && r[0] != undefined) {
+                    //  try{
+                    var od = {};
+                    od.word = w;
+                    //  if(r[0].meanings!=undefined && r[0].meanings.length>0 && r[0].meanings[0].definitions!=undefined){
+                    //    alert(JSON.stringify(r[0].meanings[0]));//.definitions;
+                    var ms = r[0].meanings[0].definitions;
+                    var ss = f + ": \n\n";
+                    var od = {};
+                    od.word = f;
+                    od.definitions = [];
+                    od.aud = ""
+                    ms.forEach((e, index) => {
+                        var k = (1 + index) + ")." + e.definition + "\n\n";;
+                        ss += k;
+                        od.definitions.push(k);
+
+                    });
+                    var m = ss
+
+                    od.definitions = m;
+                    od.aud = words[i].aud;
+                    obw.push(od);
+                    alert(JSON.stringify(obw));
+                    //    }
+                    //    else alert("no data for word: "+w);
+
+                    //     UpdateJson(linkd, obd, function() { alert("ok") });
+                    //  }
+
+                }
+
+
+            });
+
+        } //  catch(e){alert()}//"error for word: "+w
+
+    }
+
+
+
+
+    function find(f, callback) {
+        for (var i = 0; i < words.length; i++) {
+            if (words[i].word == f) {
+                textarea.value = words[i].definitions;
+                if (words[i].aud != "") aud.src = words[i].aud;
+                return;
+            }
+        }
+        GetJson(linkapi + f, function(r) {
+
+            //    try {
+            if (r[0] == null || r[0] == undefined) {
+                alert("no data for word: " + f);
+                // return;
+            } else {
+
+                var ms = r[0].meanings[0].definitions;
+                var ss = f + ": \n\n";
+                var od = {};
+                od.word = f;
+                od.definitions = [];
+                od.aud = ""
+                ms.forEach((e, index) => {
+                    var k = (1 + index) + ")." + e.definition + "\n\n";;
+                    ss += k;
+                    od.definitions.push(k);
+
+                });
+                var m = ss //.definition
+
+                // textarea.value = m + "\n\n\n\n" + JSON.stringify(r).replace(/,/g, "\n").replace(/"/g, " ");
+                textarea.value = m;
+                //  alert(m)
+
+                var a = r[0].phonetics[0].audio; //JSON.stringify()
+                if (a != undefined) {
+                    aud.src = a;
+                    od.aud = a;
+                } else playtx(f);
+                /////////////////////////////////////////////////////
+                if (findInArd(f) === null) {
+                    words.push(od);
+                    UpdateJson(linkdicc, {
+                        words: words
+                    }, function() {
+                        if (callback != undefined) callback()
+                    }); //alert("new word added to a   rd")}
+
+                }
+            }
+        });
+    }
+
+    function findInArd(w) {
+        for (var i = 0; i < words.length; i++) {
+            if (words[i].word == w) {
+                return words[i];
+            }
+        }
+        return null;
+    }
+
+
+    playtx = function(t) {
+        const message = new SpeechSynthesisUtterance(t);
+        window.speechSynthesis.speak(message);
+
+    }
+
+    addNewW = function(w) {
+        GetJson(linkd, function(r) {
+            obd = r;
+            ar = r;
+            var sk = ""
+            if (ar.indexOf(w) === -1) ar.push(w);
+            else {
+                alert("Word already exist");
+                return;
+            }
+            ar.sort();
+
+            sk.innerHTML += "<option>" + w + "</option>";
+            find(w);
+            localStorage.setItem("diccionario", ar.toString());
+            UpdateJson(linkd, ar);
+            setUpSel(ar);
+            sel.value = w;
+            alert("word added...");
+        });
+
+    }
+
+
+
+    setUpSel = function(ar) {
+        //alert(ar)
+        ar.sort();
+        var s = "";
+        for (var i = 0; i < ar.length; i++) {
+            s += "<option>" + ar[i] + "</option>";
+        }
+        sel.innerHTML = s;
+    }
+
+    delw = function(w) {
+        var i = ar.indexOf(w);
+        alert(w)
+        if (i >= 1) {
+            if (confirm("Are you sure you want to delete '" + w + "'??")) {
+                ar.splice(i, 1);
+                localStorage.setItem("diccionario", ar.toString());
+                UpdateJson(linkd, ar);
+                setUpSel(ar);
+
+            }
+
+        }
+
+    }
+    /*
+    const draggable = d_
+    let isDragging = false;
+    let offsetX, offsetY;
+
+    draggable.addEventListener('mousedown', (e) => {//
+      isDragging = true;
+      // Calculate where the cursor is relative to the div's corner
+      offsetX = e.clientX - draggable.getBoundingClientRect().left;
+      offsetY = e.clientY - draggable.getBoundingClientRect().top;
+      draggable.style.cursor = 'grabbing';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      
+      // Update div position based on mouse position and offset
+      draggable.style.left = `${e.clientX - offsetX}px`;
+      draggable.style.top = `${e.clientY - offsetY}px`;
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      draggable.style.cursor = 'grab';
+    });
+
+
+    //const box = document.getElementById(d_);
+    //let offsetX, offsetY;
+    box=d_;
+
+    box.addEventListener('touchstart', (e) => {
+      const touch = e.touches[0];
+      // Calculate the distance between touch point and element top-left corner
+      offsetX = touch.clientX - box.offsetLeft;
+      offsetY = touch.clientY - box.offsetTop;
+    }, { passive: false });
+
+    box.addEventListener('touchmove', (e) => {
+      e.preventDefault(); // Stop scrolling
+      const touch = e.touches[0];
+      
+      // Update position
+      box.style.left = (touch.clientX - offsetX) + 'px';
+      box.style.top = (touch.clientY - offsetY) + 'px';
+      box.style.position = 'absolute';
+    }, { passive: false });
+    */
+    findW = function(w) {
+
+        GetJson(linkapi + w, function() {
+
+            var ms = r[0].meanings[0].definitions;
+            var ss = f + ": \n\n";
+            ms.forEach((e, index) => {
+                ss += (1 + index) + ")." + e.definition + "\n\n";
+            });
+            var m = ss //.definition
+        })
+        return [w, ss]
+    }
+    setUpModeTest = function() {
+        from = 0, to = 0, art = [];
+        var s = `
+
+`;
+
+    }
+    setArTest = function() {
+
+        art = art.splice(from - 1, to - 1)
+        for (var i = from; i < to; i++) {
+            art.push(GetJson(linkapi + ar[i], function() {}));
+
+        }
+
+        alert(art)
+
+    }
+
+    setUpModeTest();
 </script>
