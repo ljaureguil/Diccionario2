@@ -1,4 +1,17 @@
 
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" href="https://images.icon-icons.com/270/PNG/512/Dictionary_29937.png" type="image/png">
+    <title>Diccionario</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+</head>
+
+
+
+
 <style>
     button{
         background: #0088ff;
@@ -56,7 +69,7 @@
     <br><button onclick='aud.play()' style='font-size:10px;'>Play mp3</button>
     <button onclick='playtx(sel.value)' style='font-size:10px;'>Play TxTo Speech</button><br>
     Add new Word . . . <input id='inw'></input> <button onclick='addNewW(inw.value)' style='width:auto;'>Add it</button> 
-    <button onclick='find(inw.value)' style='width:auto;'>Find it</button><br>
+    <button onclick='find(inw.value)' style='width:auto;'>Find it</button> <button onclick='addOwnDef(inw.value)' style='width:auto;'>Find it</button><br>
     from<input type="number" oninput="if(this.value<=ar.length) from=this.value;else alert('too high')"></input>
     <br>to<input type="number" oninput="if(this.value>to && this.value<ar.length) to=this.value;else alert('number to hi or les than from number');"></input>;
     <br><button onclick="setArTest()">Set Up test</button>
@@ -282,6 +295,25 @@
 
     }
 
+    addOwnDef = function(w) {
+        var d = prompt("Enter your definition for '" + w + "':");
+        if (d != null && d.trim() != "") {
+            var od = findInArd(w);
+            if (od != null) {
+                od.definitions += "\n\nYour definition: " + d;
+                UpdateJson(linkdicc, {
+                    words: words
+                }, function() {
+                    alert("Definition added to word: " + w);
+                    find(w); // Refresh the displayed definition
+                });
+            } else {
+                alert("Word not found in dictionary.");
+            }
+        } else {
+            alert("Definition cannot be empty.");
+        }
+    }
 
 
     setUpSel = function(ar) {
@@ -391,3 +423,4 @@
 
     setUpModeTest();
 </script>
+</html>
