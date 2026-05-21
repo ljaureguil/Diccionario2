@@ -1,4 +1,3 @@
-
 <html>
 
 <head>
@@ -13,7 +12,7 @@
 
 
 <style>
-    button{
+    button {
         background: #0088ff;
         color: #fff;
         border: none;
@@ -21,19 +20,21 @@
         border-radius: 3px;
         cursor: pointer;
     }
-    input{
+
+    input {
         padding: 5px;
         border: 1px solid #ccc;
         border-radius: 3px;
-        margin:5px;
+        margin: 5px;
     }
+
     #todo {
-        text-align:center;
+        text-align: center;
         position: relative;
         width: 100%;
         height: 100vh;
         background: #eee;
-        margin:20px;
+        margin: 20px;
     }
 
     #container {
@@ -55,10 +56,12 @@
         transform: scale(.5);
     }
 </style>
+<script async src="https://google.com"></script>
+Search<div class="gcse-search"></div>
 
 <div id="todo">
 
-<br>
+    <br>
     ..........................
     <select id='sel' style='width:80%;' oninput='find(this.value)'></select>
     <button onclick='delw(sel.value)' style='width:auto;'>Del</button>
@@ -68,10 +71,24 @@
 
     <br><button onclick='aud.play()' style='font-size:10px;'>Play mp3</button>
     <button onclick='playtx(sel.value)' style='font-size:10px;'>Play TxTo Speech</button><br>
-    Add new Word . . . <input id='inw'></input> <button onclick='addNewW(inw.value)' style='width:auto;'>Add it</button> 
-    <button onclick='find(inw.value)' style='width:auto;'>Find it</button> <button onclick='addOwnDef(inw.value)' style='width:auto;'>Find it</button><br>
+    Add new Word . . . <input id='inw'></input> <button onclick='addNewW(inw.value)' style='width:auto;'>Add it</button>
+    <button onclick='find(inw.value)' style='width:auto;'>Find it</button>
+    <button onclick='addOwnDef(inw.value)' style='width:auto;'>Add own def</button><br>
+    <button onclick='busq.value=inw.value+" meaning";btnsrch.click()' style='width:auto;'>Search on google</button><br>
+    <div class="search-box" style="display: none;">
+        <h1>Google Custom Search</h1>
+        <form action="https://www.google.com/search" method="GET" target="_blank">
+            <input id="busq" type="text" name="q" placeholder="Search Google..." />
+            <br>
+            <input id="btnsrch" type="submit" value="Search">
+        </form>
+    </div>
+
+
+
     from<input type="number" oninput="if(this.value<=ar.length) from=this.value;else alert('too high')"></input>
-    <br>to<input type="number" oninput="if(this.value>to && this.value<ar.length) to=this.value;else alert('number to hi or les than from number');"></input>;
+    <br>to<input type="number"
+        oninput="if(this.value>to && this.value<ar.length) to=this.value;else alert('number to hi or les than from number');"></input>;
     <br><button onclick="setArTest()">Set Up test</button>
 
     <br><br>
@@ -81,7 +98,9 @@
 
     <textarea id='textarea' style='width:90%;height:40%;font-size:10px;'></textarea>
 
-    <audio id="aud" click="this.play()" onload="this.pause();this.currentTime = 0;" src="https://www.pacdv.com/sounds/applause-sound/app-15.mp3" type="audio/mp3" autoplay style="display:block;"></audio>
+    <audio id="aud" click="this.play()" onload="this.pause();this.currentTime = 0;"
+        src="https://www.pacdv.com/sounds/applause-sound/app-15.mp3" type="audio/mp3" autoplay
+        style="display:block;"></audio>
     <br><br>
     <br><br>
 
@@ -102,7 +121,7 @@
     var link = "https://api.jsonblob.com/019b7f1f-ed12-77d2-b6db-8bd01fcb81ea"; //https://api.jsonblob.com/019b5163-39dc-74c4-b292-6655ebb3cf98"
     //var GetJson,UpdateJson;
 
-    loadDoc = function(url, callback) {
+    loadDoc = function (url, callback) {
 
         var xhttp = new XMLHttpRequest();
         xhttp.open("GET", url, false);
@@ -110,12 +129,12 @@
         if (callback != undefined) callback(xhttp.responseText);
         return xhttp.responseText;
     }
-    loadDoc(linklib, function(r) {
+    loadDoc(linklib, function (r) {
         var s = document.createElement("script");
         s.innerHTML = r;
         document.body.appendChild(s)
 
-        ;
+            ;
         inic()
     });
 
@@ -130,7 +149,7 @@
 
         var linkd = "https://api.jsonblob.com/019a741c-2015-743a-a642-933fc22eeab7"
 
-        GetJson(linkd, function(r) {
+        GetJson(linkd, function (r) {
             obd = r;
             words = `leasure,dwell,endeavour,remonstrance,acquainted,obliging,ought,wit,dejected,puzzled,dared,agreeable,undeviating,remissness,rigour,fondness,panegyric,flattery,`;
             var wl = localStorage.getItem("diccionario")
@@ -139,10 +158,10 @@
             ar = obd;
             var s = ar[1];
             var ff = find(s);
-            setTimeout(function() {
+            setTimeout(function () {
                 setUpSel(ar);
             }, 1500);
-            GetJson(linkdicc, function(r) {
+            GetJson(linkdicc, function (r) {
                 words = r.words;
 
 
@@ -159,7 +178,7 @@
         for (var i = 0; i < obd.length; i++) {
             var w = obd[i];
             //  alert(w);
-            GetJson(linkapi + w, function(r) {
+            GetJson(linkapi + w, function (r) {
                 //  if(confirm("do the next")){
                 if (r[0] != null && r[0] != undefined) {
                     //  try{
@@ -211,7 +230,7 @@
                 return;
             }
         }
-        GetJson(linkapi + f, function(r) {
+        GetJson(linkapi + f, function (r) {
 
             //    try {
             if (r[0] == null || r[0] == undefined) {
@@ -247,7 +266,7 @@
                     words.push(od);
                     UpdateJson(linkdicc, {
                         words: words
-                    }, function() {
+                    }, function () {
                         if (callback != undefined) callback()
                     }); //alert("new word added to a   rd")}
 
@@ -266,14 +285,14 @@
     }
 
 
-    playtx = function(t) {
+    playtx = function (t) {
         const message = new SpeechSynthesisUtterance(t);
         window.speechSynthesis.speak(message);
 
     }
 
-    addNewW = function(w) {
-        GetJson(linkd, function(r) {
+    addNewW = function (w) {
+        GetJson(linkd, function (r) {
             obd = r;
             ar = r;
             var sk = ""
@@ -295,7 +314,7 @@
 
     }
 
-    addOwnDef = function(w) {
+    addOwnDef = function (w) {
         var d = prompt("Enter your definition for '" + w + "':");
         if (d != null && d.trim() != "") {
             var od = findInArd(w);
@@ -303,7 +322,7 @@
                 od.definitions += "\n\nYour definition: " + d;
                 UpdateJson(linkdicc, {
                     words: words
-                }, function() {
+                }, function () {
                     alert("Definition added to word: " + w);
                     find(w); // Refresh the displayed definition
                 });
@@ -316,7 +335,7 @@
     }
 
 
-    setUpSel = function(ar) {
+    setUpSel = function (ar) {
         //alert(ar)
         ar.sort();
         var s = "";
@@ -326,7 +345,7 @@
         sel.innerHTML = s;
     }
 
-    delw = function(w) {
+    delw = function (w) {
         var i = ar.indexOf(w);
         alert(w)
         if (i >= 1) {
@@ -389,9 +408,9 @@
       box.style.position = 'absolute';
     }, { passive: false });
     */
-    findW = function(w) {
+    findW = function (w) {
 
-        GetJson(linkapi + w, function() {
+        GetJson(linkapi + w, function () {
 
             var ms = r[0].meanings[0].definitions;
             var ss = f + ": \n\n";
@@ -402,18 +421,18 @@
         })
         return [w, ss]
     }
-    setUpModeTest = function() {
+    setUpModeTest = function () {
         from = 0, to = 0, art = [];
         var s = `
 
 `;
 
     }
-    setArTest = function() {
+    setArTest = function () {
 
         art = art.splice(from - 1, to - 1)
         for (var i = from; i < to; i++) {
-            art.push(GetJson(linkapi + ar[i], function() {}));
+            art.push(GetJson(linkapi + ar[i], function () { }));
 
         }
 
@@ -423,4 +442,5 @@
 
     setUpModeTest();
 </script>
+
 </html>
