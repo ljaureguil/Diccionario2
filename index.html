@@ -103,15 +103,16 @@ Search<div class="gcse-search"></div>
         style="display:block;"></audio>
     <br><br>
     <br><br>
-
-
-    <button onclick="convert()">Convert words to obf</button>
-
+    <div id="testcontainer"style="width:100%;height:60%;text-align:center;font-size:10px;overflow:auto;background:rgba(248, 5, 5, 0.81);position:absolute;top: 15%;;display:none;">
+<div id="dt" style="width:50%;height:100%;overflow:auto;font-size:10px;top:00%;position: absolute;left:0%;"></div>
+<div id="dw" style="width:20%;height:100%;background:rgba(0,255,0,0.25);overflow:auto;font-size:10px;top:10%;position: absolute;right:10%;"></div>
+<button onclick="testcontainer.style.display='none';" style="position: absolute; bottom: 10px; right: 10px;">Close</button>
+</div>
 </div>
 
 
 
-<script>
+<script>//osition:absolute;
     var words = [];
     sel = document.getElementById("sel");
     //Libro ***https://www.gutenberg.org/files/46399/46399-h/46399-h.htm
@@ -171,54 +172,7 @@ Search<div class="gcse-search"></div>
 
     }
 
-    function convert() {
-        alert(obd);
-
-        var obw = {};
-        for (var i = 0; i < obd.length; i++) {
-            var w = obd[i];
-            //  alert(w);
-            GetJson(linkapi + w, function (r) {
-                //  if(confirm("do the next")){
-                if (r[0] != null && r[0] != undefined) {
-                    //  try{
-                    var od = {};
-                    od.word = w;
-                    //  if(r[0].meanings!=undefined && r[0].meanings.length>0 && r[0].meanings[0].definitions!=undefined){
-                    //    alert(JSON.stringify(r[0].meanings[0]));//.definitions;
-                    var ms = r[0].meanings[0].definitions;
-                    var ss = f + ": \n\n";
-                    var od = {};
-                    od.word = f;
-                    od.definitions = [];
-                    od.aud = ""
-                    ms.forEach((e, index) => {
-                        var k = (1 + index) + ")." + e.definition + "\n\n";;
-                        ss += k;
-                        od.definitions.push(k);
-
-                    });
-                    var m = ss
-
-                    od.definitions = m;
-                    od.aud = words[i].aud;
-                    obw.push(od);
-                    alert(JSON.stringify(obw));
-                    //    }
-                    //    else alert("no data for word: "+w);
-
-                    //     UpdateJson(linkd, obd, function() { alert("ok") });
-                    //  }
-
-                }
-
-
-            });
-
-        } //  catch(e){alert()}//"error for word: "+w
-
-    }
-
+    
 
 
 
@@ -429,16 +383,41 @@ Search<div class="gcse-search"></div>
 
     }
     setArTest = function () {
+        testcontainer.style.display = 'block';
+     
+         dt.innerHTML="";
+         dw.innerHTML="";
 
-        art = art.splice(from - 1, to - 1)
-        for (var i = from; i < to; i++) {
-            art.push(GetJson(linkapi + ar[i], function () { }));
-
-        }
-
-        alert(art)
+   for(var i=0;i<words.length;i++){
+    var els=crw(words[i]);
+    dw.appendChild(els.bword);
+         dt.appendChild(els.def);
+  
 
     }
+    }
+    function crw(w){
+        var d=w.definitions;
+      
+       var ta=document.createElement("textarea");
+         ta.value=":\n\n"+d;
+         ta.style="width:80%;height:20%;font-size:10px;margin:10px;  ";
+       
+         ta.name=w.word;
+            ta.onclick=function(){
+                playtx(this.name);
+            };
+            tw=document.createElement("button");
+            tw.innerHTML=w.word;
+            tw.style="width:80%;height:auto;font-size:20px;margin:10px;  ";
+            tw.onclick=function(){
+                playtx(this.innerHTML);
+            };
+            ta.elw=tw;
+            tw.eldef=ta;
+         return {def:ta,bword:tw};
+    }
+
 
     setUpModeTest();
 </script>
