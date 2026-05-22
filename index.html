@@ -113,7 +113,7 @@ Search<div class="gcse-search"></div>
 
 
 <script>//osition:absolute;
-    var words = [];
+    var words = [], defselected, wselected;
     sel = document.getElementById("sel");
     //Libro ***https://www.gutenberg.org/files/46399/46399-h/46399-h.htm
     var linkdicc = 'https://api.jsonblob.com/019e1d07-485a-7032-9548-bf468ae017f4'
@@ -396,6 +396,7 @@ Search<div class="gcse-search"></div>
 
     }
     }
+
     function crw(w){
         var d=w.definitions;
       
@@ -405,13 +406,16 @@ Search<div class="gcse-search"></div>
        
          ta.name=w.word;
             ta.onclick=function(){
-                playtx(this.name);
-            };
+                defselected=this;
+                alert(this.name+"\n\n"+wselected.name)         };
             tw=document.createElement("button");
             tw.innerHTML=w.word;
+            tw.name=w.word;
             tw.style="width:80%;height:auto;font-size:20px;margin:10px;  ";
             tw.onclick=function(){
-                playtx(this.innerHTML);
+                wselected=this;
+                alert(this.name+"\n\n"+defselected.name)
+
             };
             ta.elw=tw;
             tw.eldef=ta;
