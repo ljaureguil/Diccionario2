@@ -103,11 +103,16 @@ Search<div class="gcse-search"></div>
         style="display:block;"></audio>
     <br><br>
     <br><br>
-    <div id="testcontainer"style="width:100%;height:60%;text-align:center;font-size:10px;overflow:auto;background:rgba(248, 5, 5, 0.81);position:absolute;top: 15%;;display:none;">
-<div id="dt" style="width:50%;height:100%;overflow:auto;font-size:10px;top:00%;position: absolute;left:0%;"></div>
-<div id="dw" style="width:20%;height:100%;background:rgba(0,255,0,0.25);overflow:auto;font-size:10px;top:10%;position: absolute;right:10%;"></div>
-<button onclick="testcontainer.style.display='none';" style="position: absolute; bottom: 10px; right: 10px;">Close</button>
-</div>
+    <div id="testcontainer"
+        style="width:100%;height:80%;text-align:center;font-size:10px;overflow:auto;background:rgba(33, 238, 221, 0.41);position:absolute;top: 10%;;display:none;">
+        <div id="dt" style="width:50%;height:80%;overflow:auto;font-size:10px;top:00%;position: absolute;left:0%;">
+        </div>
+        <div id="dw"
+            style="width:20%;height:80%;background:rgba(0,255,0,0.25);overflow:auto;font-size:10px;top:10%;position: absolute;right:10%;">
+        </div>
+        <button onclick="testcontainer.style.display='none';"
+            style="position: absolute; bottom: 5px; right: 10px;width:95%">Close</button>
+    </div>
 </div>
 
 
@@ -172,7 +177,7 @@ Search<div class="gcse-search"></div>
 
     }
 
-    
+
 
 
 
@@ -384,42 +389,74 @@ Search<div class="gcse-search"></div>
     }
     setArTest = function () {
         testcontainer.style.display = 'block';
-     
-         dt.innerHTML="";
-         dw.innerHTML="";
 
-   for(var i=0;i<words.length;i++){
-    var els=crw(words[i]);
-    dw.appendChild(els.bword);
-         dt.appendChild(els.def);
-  
+        dt.innerHTML = "";
+        dw.innerHTML = "";
+        arw = [], ard = [], arww = [], ardd = [];
+
+        for (var i = 0; i < words.length; i++) {
+            var els = crw(words[i]);
+            arw.push(els.bword);
+            ard.push(els.def);
+            arww.push(i);
+            ardd.push(i);
+
+            //  dw.appendChild(els.bword);
+            // dt.appendChild(els.def);
+        }
+        arww.sort(() => Math.random() - .5)
+        ardd.sort(() => Math.random() - .5)
+
+
+        for (var i = 0; i < arw.length; i++) {
+            dw.appendChild(arw[arww[i]]);
+            dt.appendChild(ard[ardd[i]]);
+
+        }
 
     }
-    }
 
-    function crw(w){
-        var d=w.definitions;
-      
-       var ta=document.createElement("textarea");
-         ta.value=":\n\n"+d;
-         ta.style="width:80%;height:20%;font-size:10px;margin:10px;  ";
-       
-         ta.name=w.word;
-            ta.onclick=function(){
-                defselected=this;
-                alert(this.name+"\n\n"+wselected.name)         };
-            tw=document.createElement("button");
-            tw.innerHTML=w.word;
-            tw.name=w.word;
-            tw.style="width:80%;height:auto;font-size:20px;margin:10px;  ";
-            tw.onclick=function(){
-                wselected=this;
-                alert(this.name+"\n\n"+defselected.name)
+    function crw(w) {
+        var d = w.definitions;
 
-            };
-            ta.elw=tw;
-            tw.eldef=ta;
-         return {def:ta,bword:tw};
+        var ta = document.createElement("textarea");
+        ta.value = d;
+        ta.style = "width:80%;height:25%;font-size:10px;margin:10px;  ";
+
+        ta.name = w.word;
+        ta.onclick = function () {
+            defselected = this;
+            if (this.name === wselected.name) {
+                alert("good job");
+                //  wselected.remove();
+                // this.remove()
+                wselected.style.opacity = .42;
+                this.style.opacity = .42
+
+            }
+            else alert("Wrong")
+
+        };
+        tw = document.createElement("button");
+        tw.innerHTML = w.word;
+        tw.name = w.word;
+        tw.style = "width:90%;height:auto;font-size:18px;margin:10px;  ";
+        tw.onclick = function () {
+            wselected = this;
+            if (this.name === defselected.name) {
+                alert("good job");
+                //  defselected.remove();
+                //  this.remove();
+                defselected.style.opacity = .42;
+                this.style.opacity = .42
+            }
+            else alert("Wrong")
+
+
+        };
+        ta.elw = tw;
+        tw.eldef = ta;
+        return { def: ta, bword: tw };
     }
 
 
