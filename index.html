@@ -113,7 +113,7 @@ Search<div class="gcse-search"></div>
             style="width:35%;height:90%;background:rgba(0,255,0,0.25);overflow:auto;font-size:10px;top:0%;position: absolute;right:12%;">
         </div>
         <p id="psel"
-            style="position: absolute; bottom: 10px; right:45%;font-size:22px;color:red;font-weight: bold;transition: font-size 0.3s ease;">
+            style="position: absolute; bottom: 10px; right:45%;font-size:20px;color:red;font-weight: bold;transition: font-size 0.3s ease;">
         </p>
         <button onclick="testcontainer.style.display='none';"
             style="position: absolute; bottom: 2px; right: 10px;width:95%">Close</button>
@@ -451,11 +451,12 @@ Search<div class="gcse-search"></div>
         var ta = document.createElement("textarea");
         ta.value = d;
         ta.readOnly = true;
-        ta.style = "width:80%;height:25%;font-size:10px;margin:10px; border-radius:5px;background:rgba(255,255,180,1);";
+        ta.style = "font-weight:bold;box-shadow: rgba(50, 50, 93, 0.925) 0px 20px 50px -10px, rgba(0, 0, 0, 0.93) 0px 10px 30px -10px;width:80%;height:25%;font-size:10px;margin:10px; border-radius:5px;background:url(https://media.istockphoto.com/id/1164310977/photo/recycled-paper-texture-background-in-cyan-turquoise-teal-aqua-green-blue-mint-vintage-retro.jpg?s=612x612&w=0&k=20&c=5x1DxmOg7VzGbQ-TdhVEporTICnbiA1RsBWBdqz9C1s=);";
 
         ta.name = w.word;
         ta.onclick = function () {
             defselected = this;
+            // var wt=wselected.name;
             if (this.name === wselected.name) {
                 //  alert("good job");
                 //  wselected.remove();
@@ -466,16 +467,21 @@ Search<div class="gcse-search"></div>
                 wselected = undefined;
                 psel.innerHTML = "GOOD JOB . . . Keep going";
                 psel.style.fontSize = "60px";
-                setTimeout(function () { psel.style.fontSize = "22px" }, 3000)
+                setTimeout(function () { psel.style.fontSize = "20px" }, 3000)
             }
-            else alert("Wrong");
+            else {
+                psel.innerHTML = "Wrong..."
+                psel.style.fontSize = "80px";
+
+                setTimeout(function () { psel.style.fontSize = "20px"; psel.innerHTML = "Selected word: " + wselected.name; }, 3000)
+            }//alert("Wrong");
             defselected = undefined;
 
         };
         tw = document.createElement("button");
         tw.innerHTML = w.word;
         tw.name = w.word;
-        tw.style = "width:90%;height:auto;font-size:18px;margin:10px;  ";
+        tw.style = "width:90%;height:auto;font-size:18px;margin:10px; box-shadow: rgba(50, 50, 93, 0.925) 0px 10px 30px -10px, rgba(0, 0, 0, 0.93) 0px 10px 30px -10px; ";
         tw.onclick = function () {
             psel.innerHTML = "Selected word: " + this.name;
             wselected = this;
@@ -489,9 +495,15 @@ Search<div class="gcse-search"></div>
                 wselected = undefined;
                 psel.innerHTML = "GOOD JOB . . . Keep going";
                 psel.style.fontSize = "60px";
-                setTimeout(function () { psel.style.fontSize = "22px" }, 3000)
+                setTimeout(function () { psel.style.fontSize = "20px" }, 3000)
             }
-            else alert("Wrong")
+            else {
+                psel.innerHTML = "Wrong..."
+                psel.style.fontSize = "80px";
+                setTimeout(function () { psel.style.fontSize = "20px"; psel.innerHTML = "Selected word: " + this.name; }, 3000)
+
+
+            }// alert("Wrong")
             wselected = undefined;
             //     psel.innerHTML = "";
 
