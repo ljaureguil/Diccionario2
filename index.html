@@ -15,7 +15,7 @@
     button {
         background: #0088ff;
         color: #fff;
-        border: none;
+
         margin: 5px 10px;
         border-radius: 3px;
         cursor: pointer;
@@ -465,9 +465,7 @@ Search<div class="gcse-search"></div>
             defselected = this;
             // var wt=wselected.name;
             if (this.name === wselected.name) {
-                //  alert("good job");
-                //  wselected.remove();
-                // this.remove()
+                this.value = "          Good Job, " + wselected.name + ":\n\n" + this.value
                 wselected.style.opacity = .42;
                 this.style.opacity = .42;
                 defselected = undefined;
@@ -488,14 +486,23 @@ Search<div class="gcse-search"></div>
         tw = document.createElement("button");
         tw.innerHTML = w.word;
         tw.name = w.word;
-        tw.style = "width:90%;height:auto;font-size:18px;margin:10px; box-shadow: rgba(50, 50, 93, 0.925) 0px 10px 30px -10px, rgba(0, 0, 0, 0.93) 0px 10px 30px -10px; ";
+        tw.style = "width:90%;height:auto;font-size:18px;margin:25px; box-shadow: rgba(50, 50, 93, 0.925) 0px 10px 30px -10px, rgba(0, 0, 0, 0.93) 0px 10px 30px -10px; ";
         tw.onclick = function () {
+            var ae = dw.children;
+
+            for (var i = 0; i < ae.length; i++) {
+                ae[i].style.color = "white";
+                ae[i].style.background = "#0088ff";
+                ae[i].style.scale = "1 1"
+            }
+            this.style.color = "black"
+            this.style.background = "white";
+            this.style.scale = "1 2";
+
             psel.innerHTML = "Selected word: " + this.name;
             wselected = this;
             if (this.name === defselected.name) {
-                //    alert("good job");
-                //  defselected.remove();
-                //  this.remove();
+                defselected.value = "          Good Job, " + defselected.value + ":\n\n" + defselected.value;
                 defselected.style.opacity = .42;
                 this.style.opacity = .42;
                 defselected = undefined;
