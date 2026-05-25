@@ -208,6 +208,7 @@ Search<div class="gcse-search"></div>
         for (var i = 0; i < words.length; i++) {
             if (words[i].word == f) {
                 textarea.value = words[i].definitions;
+                setTimeout(function () { playtx(f + " meaning: " + textarea.value) }, 2000)
                 if (words[i].aud != "") aud.src = words[i].aud;
                 return;
             }
@@ -236,6 +237,7 @@ Search<div class="gcse-search"></div>
 
                 // textarea.value = m + "\n\n\n\n" + JSON.stringify(r).replace(/,/g, "\n").replace(/"/g, " ");
                 textarea.value = m;
+                playtx(f + " meaning: " + m)
                 //  alert(m)
 
                 var a = r[0].phonetics[0].audio; //JSON.stringify()
@@ -474,11 +476,13 @@ Search<div class="gcse-search"></div>
                 this.style.opacity = .42;
                 defselected = undefined;
                 wselected = undefined;
+                playtx("nice, " + this.value)
                 psel.innerHTML = "GOOD JOB . . . Keep going";
                 psel.style.fontSize = "60px";
                 setTimeout(function () { psel.style.fontSize = "20px" }, 3000)
             }
             else {
+                playtx("sorry, you are wrong")
                 psel.innerHTML = "Wrong..."
                 psel.style.fontSize = "80px";
 
@@ -509,7 +513,9 @@ Search<div class="gcse-search"></div>
             psel.innerHTML = "Selected word: " + this.name;
             wselected = this;
             if (this.name === defselected.name) {
+
                 defselected.value = "          Good Job, " + defselected.value + ":\n\n" + defselected.value;
+                playtx(defselected.value)
                 defselected.style.opacity = .42;
                 this.style.opacity = .42;
                 defselected = undefined;
@@ -519,6 +525,7 @@ Search<div class="gcse-search"></div>
                 setTimeout(function () { psel.style.fontSize = "20px" }, 3000)
             }
             else {
+                playtx("nop, your are wrong")
                 psel.innerHTML = "Wrong..."
                 psel.style.fontSize = "80px";
                 setTimeout(function () { psel.style.fontSize = "20px"; psel.innerHTML = "Selected word: " + this.name; }, 3000)
