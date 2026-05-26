@@ -172,7 +172,11 @@ Search<div class="gcse-search"></div>
                 setUpSel(ar);
             }, 1500);
             GetJson(linkdicc, function (r) {
+
                 words = r.words;
+                //  textarea.value = a;
+
+                // alert(33)
                 ///////////////////
                 var aar = [];
                 for (var i = 0; i < words.length; i++) {
@@ -228,7 +232,7 @@ Search<div class="gcse-search"></div>
                 od.definitions = [];
                 od.aud = ""
                 ms.forEach((e, index) => {
-                    var k = (1 + index) + ")." + e.definition + "\n\n";;
+                    var k = (1 + index) + ") " + e.definition + "\n\n";;
                     ss += k;
                     od.definitions.push(k);
 
@@ -401,7 +405,7 @@ Search<div class="gcse-search"></div>
             var ms = r[0].meanings[0].definitions;
             var ss = f + ": \n\n";
             ms.forEach((e, index) => {
-                ss += (1 + index) + ")." + e.definition + "\n\n";
+                ss += (1 + index) + ") " + e.definition + "\n\n";
             });
             var m = ss //.definition
         })
@@ -462,9 +466,8 @@ Search<div class="gcse-search"></div>
         ta.readOnly = true;
         ta.style = "font-weight:bold;" +
             "box-shadow: rgba(50, 50, 93, 0.925) 0px 20px 50px -10px, rgba(0, 0, 0, 0.93) 0px 10px 30px -10px;" +
-            "width:80%;height:25%;font-size:10px;margin:10px; border-radius:5px;" +
-            "background:url(https://img.magnific.com/free-photo/faded-gray-wooden-textured-flooring-background_53876-110739.jpg);background-size:100% 100%;";
-        //   "background:url(https://img.freepik.com/free-photo/watercolor-green-sea-wave-white-canvas-background_91008-499.jpg?semt=ais_hybrid&w=740&q=80);background-size:100% 100%;";
+            "width:80%;height:25%;font-size:14px;margin:10px; border-radius:5px;" +
+            "background:white;"
 
         ta.name = w.word;
         ta.onclick = function () {
