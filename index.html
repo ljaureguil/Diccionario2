@@ -104,7 +104,7 @@
 </div>
 
 <script>
-    var bien="exelent, good job.", mal="sorry, you are wrong.",sigue="good job, keep going.",name="";
+    var bien="exelent, good job.", mal="sorry, you are wrong.",sigue="good job, keep going.",nombre="";
     // aud src = https://www.pacdv.com/sounds/applause-sound/app-15.mp3 aplausos
     var words = [], defselected, wselected,obtemp;
     var sel = document.getElementById("sel");
@@ -482,13 +482,13 @@ var wo=findInArd(w)
                 this.style.opacity = .42;
                 defselected = undefined;
                 wselected = undefined;
-                playtx(bien+name + this.value)
+                playtx(bien+nombre + this.value)
                 psel.innerHTML = "GOOD JOB . . . Keep going";
                 psel.style.fontSize = "60px";
                 setTimeout(function () { psel.style.fontSize = "20px" }, 3000)
             }
             else {
-                playtx(mal+name);//"sorry, you are wrong"
+                playtx(mal+nombre);//"sorry, you are wrong"
                 psel.innerHTML = "Wrong..."
                 psel.style.fontSize = "80px";
 
@@ -521,7 +521,7 @@ var wo=findInArd(w)
             if (this.name === defselected.name) {
 
                 defselected.value = "          Good Job, " + defselected.value + ":\n\n" + defselected.value;
-                playtx(bien+name+defselected.value)
+                playtx(bien+nombre+defselected.value)
                 defselected.style.opacity = .42;
                 this.style.opacity = .42;
                 defselected = undefined;
@@ -531,7 +531,7 @@ var wo=findInArd(w)
                 setTimeout(function () { psel.style.fontSize = "20px" }, 3000)
             }
             else {
-                playtx(mal+name)
+                playtx(mal+nombre)
                 psel.innerHTML = "Wrong..."
                 psel.style.fontSize = "80px";
                 setTimeout(function () { psel.style.fontSize = "20px"; psel.innerHTML = "Selected word: " + this.name; }, 3000)
