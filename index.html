@@ -44,7 +44,7 @@
 
     <br>
     ..........................
-    <select id='sel' style='width:80%;' oninput='find(this.value)'></select>
+    <select id='sel' style='width:80%;' oninput='inw.value=this.value;find(this.value)'></select>
     <button onclick='delw(sel.value)' style='width:auto;'>Del</button>
     .................
 
@@ -96,14 +96,17 @@
         </p>
         <button onclick="testcontainer.style.display='none';"
             style="position: absolute; bottom: 2px; right: 10px;width:95%">Close</button>
+            
     </div>
+    <button onclick="eval(textarea.value)" style="width:25px;height:25px;border-radius:100%;background:#f00;color:white;position:absolute;bottom:3%;right:3%;font-size:45px;"> </button>
+
+
 </div>
 
-
-
 <script>
+    var bien="exelent, good job.", mal="sorry, you are wrong.",sigue="good job, keep going.",name="";
     // aud src = https://www.pacdv.com/sounds/applause-sound/app-15.mp3 aplausos
-    var words = [], defselected, wselected;
+    var words = [], defselected, wselected,obtemp;
     var sel = document.getElementById("sel");
     //Libro ***https://www.gutenberg.org/files/46399/46399-h/46399-h.htm
     var linkdicc = 'https://api.jsonblob.com/019e1d07-485a-7032-9548-bf468ae017f4'
@@ -126,64 +129,43 @@
         document.body.appendChild(s)
 
             ;
-        inic()
+        inic2()
     });
 
     //eval(r);GetJson=GetJson;UpdateJson=UpdateJson;alert("ok")
 
-    var linkd = "https://api.jsonblob.com/019a741c-2015-743a-a642-933fc22eeab7"
+   // var linkd = "https://api.jsonblob.com/019a741c-2015-743a-a642-933fc22eeab7"
 
     var obd, words = [];
 
 
-    function inic() {
-
-        var linkd = "https://api.jsonblob.com/019a741c-2015-743a-a642-933fc22eeab7"
-
-        GetJson(linkd, function (r) {
-            obd = r;
-            words = `leasure,dwell,endeavour,remonstrance,acquainted,obliging,ought,wit,dejected,puzzled,dared,agreeable,undeviating,remissness,rigour,fondness,panegyric,flattery,`;
-            var wl = localStorage.getItem("diccionario")
-            if (wl === null) localStorage.setItem("diccionario", words);
-            else words = wl;
-            ar = obd;
-
-            setTimeout(function () {
-                setUpSel(ar);
-            }, 1500);
-            GetJson(linkdicc, function (r) {
-
-                words = r.words;
-                //  textarea.value = a;
-
-                // alert(33)
-                ///////////////////
-                var aar = [];
-                for (var i = 0; i < words.length; i++) {
-                    var o = JSON.stringify(words[i]);
-                    var w = words[i].word;
-                    aar.push(w + "@@@" + o)
-                }
-                aar.sort();
-                aro = [], ar = [];
-                for (var i = 0; i < aar.length; i++) {
-                    var pr = aar[i].split("@@@");
-                    var o = JSON.parse(pr[1]);
-                    aro.push(o);
-                    ar.push(pr[0])
-
-                }
-                setUpSel(ar);
-                words = aro;
-                ////////////////////
-
-
-            }, 3500);
-
-        })
-
+    function sortar(words,callback) {
+        var aar = [];
+       var  ar=words;
+                    for (var i = 0; i < ar.length; i++) {
+                        var o = JSON.stringify(ar[i]);
+                        var w = ar[i].word;
+                        aar.push(w + "@@@" + o)
+                    }
+                    aar.sort();
+                    for(var i=0;i<aar.length;i++){
+                        var pr=aar[i].split("@@@");
+                        var o=JSON.parse(pr[1]);
+                        words[i]=o;
+                    }
+                    if(callback!=undefined) callback(words);
+   
+      
     }
 
+    function inic2(){
+GetJson(linkdicc,function(r){
+    words=r.words;
+ 
+   sortar(words);
+    setUpSel2(words);
+    })
+}
 
 
 
@@ -195,6 +177,7 @@
                 setTimeout(function () { playtx(textarea.value) }, 2000)
                 if (words[i].aud != "") aud.src = words[i].aud;
                 //  alert("kdkdkdk")
+                if(callback!=undefined) callback(words[i])
                 return;
             }
         }
@@ -207,11 +190,11 @@
             } else {
 
                 var ms = r[0].meanings[0].definitions;
-                var ss = f + ": \n\n";
+                var ss = "";
                 var od = {};
                 od.word = f;
                 od.definitions = [];
-                od.aud = ""
+                od.aud = "\n"
                 ms.forEach((e, index) => {
                     var k = (1 + index) + ") " + e.definition + "\n\n";;
                     ss += k;
@@ -221,8 +204,9 @@
                 var m = ss //.definition
 
                 // textarea.value = m + "\n\n\n\n" + JSON.stringify(r).replace(/,/g, "\n").replace(/"/g, " ");
-                textarea.value = m;
-                playtx(m)
+                textarea.value = f + ": \n\n" + m;
+                playtx(textarea.value)
+                od.definitions=m;
                 //  alert(m)
 
                 var a = r[0].phonetics[0].audio; //JSON.stringify()
@@ -231,15 +215,11 @@
                     od.aud = a;
                 } else playtx(f);
                 /////////////////////////////////////////////////////
-                if (findInArd(f) === null) {
-                    words.push(od);
-                    UpdateJson(linkdicc, {
-                        words: words
-                    }, function () {
-                        if (callback != undefined) callback()
-                    }); //alert("new word added to a   rd")}
-
-                }
+              //  alert(JSON.stringify(od))
+              obtemp=od;
+                if(callback!=undefined) callback(od)
+ 
+ 
             }
         });
     }
@@ -262,26 +242,40 @@
     }
 
     addNewW = function (w) {
-        GetJson(linkd, function (r) {
+        GetJson(linkdicc, function (r) {
             obd = r;
-            ar = r;
-            var sk = ""
-            if (ar.indexOf(w) === -1) ar.push(w);
-            else {
+           // ar = r.words;
+            words=r.words;
+            var sk = "";
+            var ex = findInArd(w);
+            if (words.indexOf(ex) > -1) {
                 alert("Word already exist");
-                playtx("word already exist")
-                return;
+                playtx("word already exist");
+                if(!confirm("Do you want to sreplace it?")) return;
             }
-            ar.sort();
+            if(obtemp!=undefined && obtemp.word==w){
+                words.push(obtemp);
+            }
+            else{
+                find(w);
 
-            sk.innerHTML += "<option>" + w + "</option>";
-            find(w);
-            localStorage.setItem("diccionario", ar.toString());
-            UpdateJson(linkd, ar);
-            setUpSel(ar);
-            sel.value = w;
-            alert("word added...");
-            playtx("ord added to dictionary")
+                playtx("Check the meaning, and press add it again?");
+                alert("Check the meaning, and press add it again?");
+                 return;
+              }
+            sortar(words,function(){
+                UpdateJson(linkdicc, {
+                    words: words
+                }, function () {
+                    alert("word added: alfab..." + w);
+                    setUpSel(words);
+                    sel.value = w;
+                    playtx("word added to dictionary in order alf")
+                });
+
+
+            });
+
         });
 
     }
@@ -306,10 +300,21 @@
         }
     }
 
+function setUpSel2(){
+    ifrom.placeholder = "> 0 and < " + (words.length - 1);
+    ito.placeholder = "> from and <" + (words.length - 1);
+      var s = "";
+    for (var i = 0; i < words.length; i++) {
+        s += "<option>" + words[i].word + "</option>";
+    }
+    sel.innerHTML = s;
 
+}
     setUpSel = function (ar) {
-        ifrom.placeholder = "> 0 and < " + (ar.length - 1);
-        ito.placeholder = "> from and <" + (ar.length - 1);
+ 
+ 
+ /*       ifrom.placeholder = "> 0 and < " + (words.length - 1);
+        ito.placeholder = "> from and <" + (words.length - 1);
         //alert(ar)
         ar.sort();
         var s = "";
@@ -317,21 +322,41 @@
             s += "<option>" + ar[i] + "</option>";
         }
         sel.innerHTML = s;
+        */
+       ifrom.placeholder = "> 0 and < " + (words.length - 1);
+        ito.placeholder = "> from and <" + (words.length - 1);
+        //alert(ar)
+       // ar.sort();
+        var s = "";
+        for (var i = 0; i < words.length; i++) {
+            s += "<option>" + words[i].word + "</option>";
+        }
+        sel.innerHTML = s;
+
+        
     }
 
     delw = function (w) {
-        var i = ar.indexOf(w);
-        alert(w)
-        if (i >= 1) {
+var wo=findInArd(w)
+               if (wo !== null) {
+  
+        alert(wo.word)
+
             if (confirm("Are you sure you want to delete '" + w + "'??")) {
-                ar.splice(i, 1);
-                localStorage.setItem("diccionario", ar.toString());
-                UpdateJson(linkd, ar);
-                setUpSel(ar);
+    
+               words.splice(words.indexOf(wo), 1);
+                 UpdateJson(linkdicc, {
+                    words: words
+                }, function () {
+                    alert("Word deleted: " + w);
+                    setUpSel(words); // Refresh the dropdown
+                });
+                localStorage.setItem("diccionario", JSON.stringify(words));
+  
 
             }
 
-        }
+    }
 
     }
     /*
@@ -395,13 +420,7 @@
         })
         return [w, ss]
     }
-    setUpModeTest = function () {
-        from = 0, to = 0, art = [];
-        var s = `
-
-`;
-
-    }
+ 
     setArTest = function () {
         if (ifrom.value === "" || ito.value === "") {
             if (confirm("Set range first ('OK'), or use default ('Cancel')")) return;
@@ -463,13 +482,13 @@
                 this.style.opacity = .42;
                 defselected = undefined;
                 wselected = undefined;
-                playtx("nice, " + this.value)
+                playtx(bien+name + this.value)
                 psel.innerHTML = "GOOD JOB . . . Keep going";
                 psel.style.fontSize = "60px";
                 setTimeout(function () { psel.style.fontSize = "20px" }, 3000)
             }
             else {
-                playtx("sorry, you are wrong")
+                playtx(mal+name);//"sorry, you are wrong"
                 psel.innerHTML = "Wrong..."
                 psel.style.fontSize = "80px";
 
@@ -502,7 +521,7 @@
             if (this.name === defselected.name) {
 
                 defselected.value = "          Good Job, " + defselected.value + ":\n\n" + defselected.value;
-                playtx(defselected.value)
+                playtx(bien+name+defselected.value)
                 defselected.style.opacity = .42;
                 this.style.opacity = .42;
                 defselected = undefined;
@@ -512,7 +531,7 @@
                 setTimeout(function () { psel.style.fontSize = "20px" }, 3000)
             }
             else {
-                playtx("nop, your are wrong")
+                playtx(mal+name)
                 psel.innerHTML = "Wrong..."
                 psel.style.fontSize = "80px";
                 setTimeout(function () { psel.style.fontSize = "20px"; psel.innerHTML = "Selected word: " + this.name; }, 3000)
@@ -529,7 +548,7 @@
     }
 
 
-    setUpModeTest();
+   // setUpModeTest();
 </script>
 
 </html>
