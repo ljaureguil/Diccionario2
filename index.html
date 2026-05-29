@@ -81,7 +81,7 @@
     <br>
 
 
-    <textarea id='textarea' style='width:100%;height:40%;font-size:10px;'></textarea>
+    <textarea id='textarea' style='width:100%;height:40%;font-size:12px;'></textarea>
     <button onclick="playtx(textarea.value)">Play</button>
     <audio id="aud" click="this.play()" onload="this.pause();this.currentTime = 0;" src="" type="audio/mp3" autoplay
         style="display:block;"></audio>
@@ -111,6 +111,15 @@
 
 <script>
     var bien = " exelent, good job ", mal = " sorry, you are wrong ", sigue = " good job, keep going", nombre = "";
+    var ms={};
+    ms.bien=bien;ms.mal=mal;ms.sigue=sigue;ms.nombre=nombre;
+    var bkms=localStorage.getItem("ms");
+    if(bkms!=null && bkms!=undefined){
+        ms=JSON.parse(bkms);
+        bien=ms.bien;mal=ms.mal;sigue=ms.sigue;nombre=ms.nombre;
+    }
+    else localStorage.setItem("ms", JSON.stringify(ms));
+
     // aud src = https://www.pacdv.com/sounds/applause-sound/app-15.mp3 aplausos
     var words = [], defselected, wselected, obtemp;
     var sel = document.getElementById("sel");
@@ -554,6 +563,19 @@
         return { def: ta, bword: tw };
     }
 
+    function savems() {
+        ms.bien=bien;ms.mal=mal;ms.sigue=sigue;ms.nombre=nombre;
+        localStorage.setItem("ms", JSON.stringify(ms));
+    }
+function clearms(){
+    if(confirm("Are you sure you want to clear messages?")){
+        bien = " exelent, good job ";
+        mal = " sorry, you are wrong ";
+        sigue = " good job, keep going";
+        nombre = "";
+        savems();
+    }
+}
 
     // setUpModeTest();
 </script>
