@@ -34,7 +34,11 @@
         width: 100%;
         height: 100vh;
         background: #eee;
-        //  margin: 20px;
+
+    }
+
+    #btne:hover {
+        transform: scale(3);
     }
 </style>
 <script async src="https://google.com"></script>
@@ -96,17 +100,19 @@
         </p>
         <button onclick="testcontainer.style.display='none';"
             style="position: absolute; bottom: 2px; right: 10px;width:95%">Close</button>
-            
+
     </div>
-    <button onclick="eval(textarea.value)" style="width:25px;height:25px;border-radius:100%;background:#f00;color:white;position:absolute;bottom:3%;right:3%;font-size:45px;"> </button>
+    <button id="btne" onclick="eval(textarea.value);playtx('the data has been evaluated');"
+        style="width:25px;height:25px;border-radius:100%;background:#f00;color:white;position:absolute;bottom:3%;right:3%;font-size:45px;transition: all 0.3s ease;">
+    </button>
 
 
 </div>
 
 <script>
-    var bien=" exelent, good job ", mal=" sorry, you are wrong ",sigue=" good job, keep going ",nombre="";
+    var bien = " exelent, good job ", mal = " sorry, you are wrong ", sigue = " good job, keep going", nombre = "";
     // aud src = https://www.pacdv.com/sounds/applause-sound/app-15.mp3 aplausos
-    var words = [], defselected, wselected,obtemp;
+    var words = [], defselected, wselected, obtemp;
     var sel = document.getElementById("sel");
     //Libro ***https://www.gutenberg.org/files/46399/46399-h/46399-h.htm
     var linkdicc = 'https://api.jsonblob.com/019e1d07-485a-7032-9548-bf468ae017f4'
@@ -134,38 +140,38 @@
 
     //eval(r);GetJson=GetJson;UpdateJson=UpdateJson;alert("ok")
 
-   // var linkd = "https://api.jsonblob.com/019a741c-2015-743a-a642-933fc22eeab7"
+    // var linkd = "https://api.jsonblob.com/019a741c-2015-743a-a642-933fc22eeab7"
 
     var obd, words = [];
 
 
-    function sortar(words,callback) {
+    function sortar(words, callback) {
         var aar = [];
-       var  ar=words;
-                    for (var i = 0; i < ar.length; i++) {
-                        var o = JSON.stringify(ar[i]);
-                        var w = ar[i].word;
-                        aar.push(w + "@@@" + o)
-                    }
-                    aar.sort();
-                    for(var i=0;i<aar.length;i++){
-                        var pr=aar[i].split("@@@");
-                        var o=JSON.parse(pr[1]);
-                        words[i]=o;
-                    }
-                    if(callback!=undefined) callback(words);
-   
-      
+        var ar = words;
+        for (var i = 0; i < ar.length; i++) {
+            var o = JSON.stringify(ar[i]);
+            var w = ar[i].word;
+            aar.push(w + "@@@" + o)
+        }
+        aar.sort();
+        for (var i = 0; i < aar.length; i++) {
+            var pr = aar[i].split("@@@");
+            var o = JSON.parse(pr[1]);
+            words[i] = o;
+        }
+        if (callback != undefined) callback(words);
+
+
     }
 
-    function inic2(){
-GetJson(linkdicc,function(r){
-    words=r.words;
- 
-   sortar(words);
-    setUpSel2(words);
-    })
-}
+    function inic2() {
+        GetJson(linkdicc, function (r) {
+            words = r.words;
+
+            sortar(words);
+            setUpSel2(words);
+        })
+    }
 
 
 
@@ -177,7 +183,7 @@ GetJson(linkdicc,function(r){
                 setTimeout(function () { playtx(textarea.value) }, 2000)
                 if (words[i].aud != "") aud.src = words[i].aud;
                 //  alert("kdkdkdk")
-                if(callback!=undefined) callback(words[i])
+                if (callback != undefined) callback(words[i])
                 return;
             }
         }
@@ -206,7 +212,7 @@ GetJson(linkdicc,function(r){
                 // textarea.value = m + "\n\n\n\n" + JSON.stringify(r).replace(/,/g, "\n").replace(/"/g, " ");
                 textarea.value = f + ": \n\n" + m;
                 playtx(textarea.value)
-                od.definitions=m;
+                od.definitions = m;
                 //  alert(m)
 
                 var a = r[0].phonetics[0].audio; //JSON.stringify()
@@ -215,11 +221,11 @@ GetJson(linkdicc,function(r){
                     od.aud = a;
                 } else playtx(f);
                 /////////////////////////////////////////////////////
-              //  alert(JSON.stringify(od))
-              obtemp=od;
-                if(callback!=undefined) callback(od)
- 
- 
+                //  alert(JSON.stringify(od))
+                obtemp = od;
+                if (callback != undefined) callback(od)
+
+
             }
         });
     }
@@ -237,6 +243,7 @@ GetJson(linkdicc,function(r){
     playtx = function (t) {
         const message = new SpeechSynthesisUtterance(t);
         //  message.lang = "es-MX"
+        window.speechSynthesis.cancel()
         window.speechSynthesis.speak(message);
 
     }
@@ -244,26 +251,26 @@ GetJson(linkdicc,function(r){
     addNewW = function (w) {
         GetJson(linkdicc, function (r) {
             obd = r;
-           // ar = r.words;
-            words=r.words;
+            // ar = r.words;
+            words = r.words;
             var sk = "";
             var ex = findInArd(w);
             if (words.indexOf(ex) > -1) {
                 alert("Word already exist");
                 playtx("word already exist");
-                if(!confirm("Do you want to sreplace it?")) return;
+                if (!confirm("Do you want to sreplace it?")) return;
             }
-            if(obtemp!=undefined && obtemp.word==w){
+            if (obtemp != undefined && obtemp.word == w) {
                 words.push(obtemp);
             }
-            else{
+            else {
                 find(w);
 
                 playtx("Check the meaning, and press add it again?");
                 alert("Check the meaning, and press add it again?");
-                 return;
-              }
-            sortar(words,function(){
+                return;
+            }
+            sortar(words, function () {
                 UpdateJson(linkdicc, {
                     words: words
                 }, function () {
@@ -300,63 +307,63 @@ GetJson(linkdicc,function(r){
         }
     }
 
-function setUpSel2(){
-    ifrom.placeholder = "> 0 and < " + (words.length - 1);
-    ito.placeholder = "> from and <" + (words.length - 1);
-      var s = "";
-    for (var i = 0; i < words.length; i++) {
-        s += "<option>" + words[i].word + "</option>";
-    }
-    sel.innerHTML = s;
-
-}
-    setUpSel = function (ar) {
- 
- 
- /*       ifrom.placeholder = "> 0 and < " + (words.length - 1);
+    function setUpSel2() {
+        ifrom.placeholder = "> 0 and < " + (words.length - 1);
         ito.placeholder = "> from and <" + (words.length - 1);
-        //alert(ar)
-        ar.sort();
-        var s = "";
-        for (var i = 0; i < ar.length; i++) {
-            s += "<option>" + ar[i] + "</option>";
-        }
-        sel.innerHTML = s;
-        */
-       ifrom.placeholder = "> 0 and < " + (words.length - 1);
-        ito.placeholder = "> from and <" + (words.length - 1);
-        //alert(ar)
-       // ar.sort();
         var s = "";
         for (var i = 0; i < words.length; i++) {
             s += "<option>" + words[i].word + "</option>";
         }
         sel.innerHTML = s;
 
-        
+    }
+    setUpSel = function (ar) {
+
+
+        /*       ifrom.placeholder = "> 0 and < " + (words.length - 1);
+               ito.placeholder = "> from and <" + (words.length - 1);
+               //alert(ar)
+               ar.sort();
+               var s = "";
+               for (var i = 0; i < ar.length; i++) {
+                   s += "<option>" + ar[i] + "</option>";
+               }
+               sel.innerHTML = s;
+               */
+        ifrom.placeholder = "> 0 and < " + (words.length - 1);
+        ito.placeholder = "> from and <" + (words.length - 1);
+        //alert(ar)
+        // ar.sort();
+        var s = "";
+        for (var i = 0; i < words.length; i++) {
+            s += "<option>" + words[i].word + "</option>";
+        }
+        sel.innerHTML = s;
+
+
     }
 
     delw = function (w) {
-var wo=findInArd(w)
-               if (wo !== null) {
-  
-        alert(wo.word)
+        var wo = findInArd(w)
+        if (wo !== null) {
+
+            alert(wo.word)
 
             if (confirm("Are you sure you want to delete '" + w + "'??")) {
-    
-               words.splice(words.indexOf(wo), 1);
-                 UpdateJson(linkdicc, {
+
+                words.splice(words.indexOf(wo), 1);
+                UpdateJson(linkdicc, {
                     words: words
                 }, function () {
                     alert("Word deleted: " + w);
                     setUpSel(words); // Refresh the dropdown
                 });
                 localStorage.setItem("diccionario", JSON.stringify(words));
-  
+
 
             }
 
-    }
+        }
 
     }
     /*
@@ -420,7 +427,7 @@ var wo=findInArd(w)
         })
         return [w, ss]
     }
- 
+
     setArTest = function () {
         if (ifrom.value === "" || ito.value === "") {
             if (confirm("Set range first ('OK'), or use default ('Cancel')")) return;
@@ -482,13 +489,13 @@ var wo=findInArd(w)
                 this.style.opacity = .42;
                 defselected = undefined;
                 wselected = undefined;
-                playtx(bien+nombre + this.value)
+                playtx(bien + nombre + this.value)
                 psel.innerHTML = "GOOD JOB . . . Keep going";
                 psel.style.fontSize = "60px";
                 setTimeout(function () { psel.style.fontSize = "20px" }, 3000)
             }
             else {
-                playtx(mal+nombre);//"sorry, you are wrong"
+                playtx(mal + nombre);//"sorry, you are wrong"
                 psel.innerHTML = "Wrong..."
                 psel.style.fontSize = "80px";
 
@@ -521,7 +528,7 @@ var wo=findInArd(w)
             if (this.name === defselected.name) {
 
                 defselected.value = "          Good Job, " + defselected.value + ":\n\n" + defselected.value;
-                playtx(bien+nombre+defselected.value)
+                playtx(bien + nombre + defselected.value)
                 defselected.style.opacity = .42;
                 this.style.opacity = .42;
                 defselected = undefined;
@@ -531,7 +538,7 @@ var wo=findInArd(w)
                 setTimeout(function () { psel.style.fontSize = "20px" }, 3000)
             }
             else {
-                playtx(mal+nombre)
+                playtx(mal + nombre)
                 psel.innerHTML = "Wrong..."
                 psel.style.fontSize = "80px";
                 setTimeout(function () { psel.style.fontSize = "20px"; psel.innerHTML = "Selected word: " + this.name; }, 3000)
@@ -548,7 +555,7 @@ var wo=findInArd(w)
     }
 
 
-   // setUpModeTest();
+    // setUpModeTest();
 </script>
 
 </html>
