@@ -72,10 +72,9 @@
 
 
 
-    from<input id="ifrom" type="number" oninput="if(this.value<=ar.length) from=this.value;else alert('too high')"
-        style="width: 30%;"></input>
-    <br>to<input id="ito" style="width: 30%;" type="number"
-        onchange="if(this.value>to && this.value<ar.length) to=this.value;else alert('number to hi or les than from number');"></input>;
+    from<input id="ifrom" type="number" style="width: 40%;" oninput="if(this.value<=ar.length) from=this.value;else alert('too high')"></input>
+    <br>to<input id="ito" style="width: 40%;" type="number"
+        onchange="//if(this.value<=ifrom.value && this.value<ar.length) to=this.value;else alert('number to hi or les than from number');"></input>;
     <br><button onclick="setArTest()">Set Up test</button>
 
     <br>
@@ -318,7 +317,7 @@
 
     function setUpSel2() {
         ifrom.placeholder = "> 0 and < " + (words.length - 1);
-        ito.placeholder = "> from and <" + (words.length - 1);
+        ito.placeholder = "> from and <" + (words.length - 1)+" or ( -n ) for all random";
         var s = "";
         for (var i = 0; i < words.length; i++) {
             s += "<option>" + words[i].word + "</option>";
@@ -328,21 +327,9 @@
     }
     setUpSel = function (ar) {
 
-
-        /*       ifrom.placeholder = "> 0 and < " + (words.length - 1);
-               ito.placeholder = "> from and <" + (words.length - 1);
-               //alert(ar)
-               ar.sort();
-               var s = "";
-               for (var i = 0; i < ar.length; i++) {
-                   s += "<option>" + ar[i] + "</option>";
-               }
-               sel.innerHTML = s;
-               */
         ifrom.placeholder = "> 0 and < " + (words.length - 1);
-        ito.placeholder = "> from and <" + (words.length - 1);
-        //alert(ar)
-        // ar.sort();
+        ito.placeholder = "> from and <" + (words.length - 1)+" or ( -n ) for all random";
+     
         var s = "";
         for (var i = 0; i < words.length; i++) {
             s += "<option>" + words[i].word + "</option>";
@@ -438,20 +425,24 @@
     }
 
     setArTest = function () {
-        if (ifrom.value === "" || ito.value === "") {
+        var tt=ito.value;
+        if(ifrom.value==="")ifrom.value=0;
+      //  if(ito.value<0)ito.value=words.length;
+        if (ito.value === "") {
             if (confirm("Set range first ('OK'), or use default ('Cancel')")) return;
             else {
                 ifrom.value = 0;
                 ito.value = words.length;
             }
         }
+        if(tt<0) ito.value=words.length;
         testcontainer.style.display = 'block';
 
         dt.innerHTML = "";
         dw.innerHTML = "";
         arw = [], ard = [], arww = [], ardd = [];
-        // for (var i = 0; i < words.length; i++) {
-        //       alert(ifrom.value + "\n\n" + ito.value)
+  
+    
         var ii = 0//ifrom.value;
         for (var i = ifrom.value * 1; i < ito.value * 1; i++) {
             var els = crw(words[i]);
@@ -461,20 +452,31 @@
             arww.push(ii);
             ardd.push(ii);
             ii++
-            //  dw.appendChild(els.bword);
-            // dt.appendChild(els.def);
+  
         }
         arww.sort(() => Math.random() - .5)
         ardd.sort(() => Math.random() - .5)
+   
+var li=arw.length;
 
-        //   alert(arww)
-        //   alert(arw)
-        for (var i = 0; i < arw.length; i++) {
+if(tt<0)li=tt*-1;
+
+        for (var i = 0; i < li; i++) {
             dw.appendChild(arw[arww[i]]);
             dt.appendChild(ard[ardd[i]]);
 
-        }
 
+    }
+
+    }
+
+    function shuffleArray(array) {
+        var temparray = array.slice(); // Create a copy of the original array
+        for (let i = temparray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [temparray[i], temparray[j]] = [temparray[j], temparray[i]];
+        }
+        return temparray;
     }
 
     function crw(w) {
