@@ -72,9 +72,9 @@
 
 
 
-    from<input id="ifrom" type="number" style="width: 40%;"
+    from<input id="ifrom" type="number" inputmode="numeric" style="width: 40%;"
         oninput="if(this.value<=ar.length) from=this.value;else alert('too high')"></input>
-    <br>to<input id="ito" style="width: 40%;" type="number"
+    <br>to<input id="ito" style="width: 40%;" type="number" inputmode="numeric"
         onchange="//if(this.value<=ifrom.value && this.value<ar.length) to=this.value;else alert('number to hi or les than from number');"></input>;
     <br><button onclick="setArTest()">Set Up test</button>
 
@@ -117,7 +117,6 @@
     if (bkms != null && bkms != undefined) {
         ms = JSON.parse(bkms);
         bien = ms.bien; mal = ms.mal; sigue = ms.sigue; nombre = ms.nombre, termina = ms.termina;
-        if(ms.termina==undefined)ms.termina=" Great job... "
     }
     else localStorage.setItem("ms", JSON.stringify(ms));
 
@@ -145,10 +144,10 @@
         document.body.appendChild(s)
 
             ;
-        inic()
+        inic2()
     });
 
-    
+    //eval(r);GetJson=GetJson;UpdateJson=UpdateJson;alert("ok")
 
     // var linkd = "https://api.jsonblob.com/019a741c-2015-743a-a642-933fc22eeab7"
 
@@ -174,7 +173,7 @@
 
     }
 
-    function inic() {
+    function inic2() {
         GetJson(linkdicc, function (r) {
             words = r.words;
 
@@ -555,8 +554,7 @@
                 if (ngood >= this.parentElement.children.length) {
                     var nn = termina + "you have finish the test...:\n\nGoods: " + ngood + "\n\nWrong: " + (ngood - nresult) + "\n\nOver all result: " + nresult + "\n\n...The test dialoge will be close";
                     playtx(nn)
-                    alert(nn);
-                    ngood=0;nresult=0;
+                    alert(nn)
                     clos.click();
                 }
             }
@@ -610,7 +608,6 @@
                     var nn = termina + "you have finish the test...:\n\nGoods: " + ngood + "\n\nWrong: " + (ngood - nresult) + "\n\nOver all result: " + nresult + "\n\n...The test dialoge will be close";
                     playtx(nn)
                     alert(nn);
-                       ngood=0;nresult=0;                
                     clos.click();
                 }
 
