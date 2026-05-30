@@ -72,9 +72,9 @@
 
 
 
-    from<input id="ifrom" type="number" inputmode="numeric" style="width: 40%;"
+    from<input id="ifrom" inputmode="numeric" style="width: 40%;"
         oninput="if(this.value<=ar.length) from=this.value;else alert('too high')"></input>
-    <br>to<input id="ito" style="width: 40%;" type="number" inputmode="numeric"
+    <br>to<input id="ito" style="width: 40%;" inputmode="numeric"
         onchange="//if(this.value<=ifrom.value && this.value<ar.length) to=this.value;else alert('number to hi or les than from number');"></input>;
     <br><button onclick="setArTest()">Set Up test</button>
 
