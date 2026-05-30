@@ -72,7 +72,8 @@
 
 
 
-    from<input id="ifrom" type="number" style="width: 40%;" oninput="if(this.value<=ar.length) from=this.value;else alert('too high')"></input>
+    from<input id="ifrom" type="number" style="width: 40%;"
+        oninput="if(this.value<=ar.length) from=this.value;else alert('too high')"></input>
     <br>to<input id="ito" style="width: 40%;" type="number"
         onchange="//if(this.value<=ifrom.value && this.value<ar.length) to=this.value;else alert('number to hi or les than from number');"></input>;
     <br><button onclick="setArTest()">Set Up test</button>
@@ -97,7 +98,7 @@
         <p id="psel"
             style="position: absolute; bottom: 10px; right:10%;font-size:20px;color:red;font-weight: bold;transition: font-size 0.3s ease;">
         </p>
-        <button onclick="testcontainer.style.display='none';"
+        <button id="clos" onclick="testcontainer.style.display='none';"
             style="position: absolute; bottom: 2px; right: 10px;width:95%">Close</button>
 
     </div>
@@ -109,13 +110,13 @@
 </div>
 
 <script>
-    var bien = " exelent, good job ", mal = " sorry, you are wrong ", sigue = " good job, keep going", nombre = "";
-    var ms={};
-    ms.bien=bien;ms.mal=mal;ms.sigue=sigue;ms.nombre=nombre;
-    var bkms=localStorage.getItem("ms");
-    if(bkms!=null && bkms!=undefined){
-        ms=JSON.parse(bkms);
-        bien=ms.bien;mal=ms.mal;sigue=ms.sigue;nombre=ms.nombre;
+    var bien = " exelent, good job ", mal = " sorry, you are wrong ", sigue = " good job, keep going", nombre = "", termina = " Great job... ", ngood = 0, nresult = 0;
+    var ms = {};
+    ms.bien = bien; ms.mal = mal; ms.sigue = sigue; ms.nombre = nombre; ms.termina = termina;
+    var bkms = localStorage.getItem("ms");
+    if (bkms != null && bkms != undefined) {
+        ms = JSON.parse(bkms);
+        bien = ms.bien; mal = ms.mal; sigue = ms.sigue; nombre = ms.nombre, termina = ms.termina;
     }
     else localStorage.setItem("ms", JSON.stringify(ms));
 
@@ -317,7 +318,7 @@
 
     function setUpSel2() {
         ifrom.placeholder = "> 0 and < " + (words.length - 1);
-        ito.placeholder = "> from and <" + (words.length - 1)+" or ( -n ) for all random";
+        ito.placeholder = "> from and <" + (words.length - 1) + " or ( -n ) for all random";
         var s = "";
         for (var i = 0; i < words.length; i++) {
             s += "<option>" + words[i].word + "</option>";
@@ -328,8 +329,8 @@
     setUpSel = function (ar) {
 
         ifrom.placeholder = "> 0 and < " + (words.length - 1);
-        ito.placeholder = "> from and <" + (words.length - 1)+" or ( -n ) for all random";
-     
+        ito.placeholder = "> from and <" + (words.length - 1) + " or ( -n ) for all random";
+
         var s = "";
         for (var i = 0; i < words.length; i++) {
             s += "<option>" + words[i].word + "</option>";
@@ -424,10 +425,10 @@
         return [w, ss]
     }
 
-    setArTest = function () {
-        var tt=ito.value;
-        if(ifrom.value==="")ifrom.value=0;
-      //  if(ito.value<0)ito.value=words.length;
+    setArTest2 = function () {
+        var tt = ito.value;
+        if (ifrom.value === "") ifrom.value = 0;
+        //  if(ito.value<0)ito.value=words.length;
         if (ito.value === "") {
             if (confirm("Set range first ('OK'), or use default ('Cancel')")) return;
             else {
@@ -435,14 +436,14 @@
                 ito.value = words.length;
             }
         }
-        if(tt<0) ito.value=words.length;
+        if (tt < 0) ito.value = words.length;
         testcontainer.style.display = 'block';
 
         dt.innerHTML = "";
         dw.innerHTML = "";
         arw = [], ard = [], arww = [], ardd = [];
-  
-    
+
+
         var ii = 0//ifrom.value;
         for (var i = ifrom.value * 1; i < ito.value * 1; i++) {
             var els = crw(words[i]);
@@ -452,31 +453,74 @@
             arww.push(ii);
             ardd.push(ii);
             ii++
-  
+
         }
         arww.sort(() => Math.random() - .5)
         ardd.sort(() => Math.random() - .5)
-   
-var li=arw.length;
 
-if(tt<0)li=tt*-1;
+        var li = arw.length;
+
+        if (tt < 0) li = tt * -1;
 
         for (var i = 0; i < li; i++) {
             dw.appendChild(arw[arww[i]]);
             dt.appendChild(ard[ardd[i]]);
 
 
-    }
+        }
 
     }
-
-    function shuffleArray(array) {
+    function shuffleArray2(array) {
         var temparray = array.slice(); // Create a copy of the original array
         for (let i = temparray.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [temparray[i], temparray[j]] = [temparray[j], temparray[i]];
         }
         return temparray;
+    }
+    function shuffleArray(array) {
+        //  var temparray = array.slice(); // Create a copy of the original array
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    setArTest = function () {
+        var nwords = words.slice();
+        if (ifrom.value === "") ifrom.value = 0;
+        //  if(ito.value<0)ito.value=words.length;
+        if (ito.value === "") {
+            if (confirm("Set range first ('OK'), or use default ('Cancel')")) return;
+            else {
+                ifrom.value = 0;
+                ito.value = words.length;
+            }
+        }
+        if (ito.value < 0) {
+            ito.value = ito.value * -1;//words.length;
+            shuffleArray(nwords)
+
+        }
+
+        testcontainer.style.display = 'block';
+
+        dt.innerHTML = "";
+        dw.innerHTML = "";
+        arw = [], ard = [], arww = [], ardd = [];
+
+        for (var i = ifrom.value * 1; i < ito.value * 1; i++) {
+            var els = crw(nwords[i]);
+            arw.push(els.bword);
+            ard.push(els.def);
+        }
+        shuffleArray(arw);
+        shuffleArray(ard);
+
+        for (var i = 0; i < arw.length; i++) {
+            dw.appendChild(arw[i]);
+            dt.appendChild(ard[i]);
+        }
     }
 
     function crw(w) {
@@ -495,20 +539,30 @@ if(tt<0)li=tt*-1;
             defselected = this;
             // var wt=wselected.name;
             if (this.name === wselected.name) {
-                this.value = "          Good Job, " + wselected.name + ":\n\n" + this.value
+                this.value = wselected.name + ":\n\n" + this.value
                 wselected.style.opacity = .42;
                 this.style.opacity = .42;
                 defselected = undefined;
                 wselected = undefined;
                 playtx(bien + nombre + this.value)
                 psel.innerHTML = "GOOD JOB . . . Keep going";
+                ngood++;
+                nresult++;
+
                 psel.style.fontSize = "60px";
                 setTimeout(function () { psel.style.fontSize = "20px" }, 3000)
+                if (ngood >= this.parentElement.children.length) {
+                    var nn = termina + "you have finish the test...:\n\nGoods: " + ngood + "\n\nWrong: " + (ngood - nresult) + "\n\nOver all result: " + nresult + "\n\n...The test dialoge will be close";
+                    playtx(nn)
+                    alert(nn)
+                    clos.click();
+                }
             }
             else {
                 playtx(mal + nombre);//"sorry, you are wrong"
                 psel.innerHTML = "Wrong..."
                 psel.style.fontSize = "80px";
+                nresult--;
 
                 setTimeout(function () { psel.style.fontSize = "20px"; psel.innerHTML = "Selected word: " + wselected.name; }, 3000)
             }//alert("Wrong");
@@ -538,7 +592,7 @@ if(tt<0)li=tt*-1;
             wselected = this;
             if (this.name === defselected.name) {
 
-                defselected.value = "          Good Job, " + defselected.value + ":\n\n" + defselected.value;
+                defselected.value = defselected.value + ":\n\n" + defselected.value;
                 playtx(bien + nombre + defselected.value)
                 defselected.style.opacity = .42;
                 this.style.opacity = .42;
@@ -546,12 +600,23 @@ if(tt<0)li=tt*-1;
                 wselected = undefined;
                 psel.innerHTML = "GOOD JOB . . . Keep going";
                 psel.style.fontSize = "60px";
+                ngood++;
+                nresult++;
+
                 setTimeout(function () { psel.style.fontSize = "20px" }, 3000)
+                if (ngood >= this.parentElement.children.length) {
+                    var nn = termina + "you have finish the test...:\n\nGoods: " + ngood + "\n\nWrong: " + (ngood - nresult) + "\n\nOver all result: " + nresult + "\n\n...The test dialoge will be close";
+                    playtx(nn)
+                    alert(nn);
+                    clos.click();
+                }
+
             }
             else {
                 playtx(mal + nombre)
                 psel.innerHTML = "Wrong..."
                 psel.style.fontSize = "80px";
+                nresult--
                 setTimeout(function () { psel.style.fontSize = "20px"; psel.innerHTML = "Selected word: " + this.name; }, 3000)
 
 
@@ -566,18 +631,19 @@ if(tt<0)li=tt*-1;
     }
 
     function savems() {
-        ms.bien=bien;ms.mal=mal;ms.sigue=sigue;ms.nombre=nombre;
+        ms.bien = bien; ms.mal = mal; ms.sigue = sigue; ms.nombre = nombre; ms.termina = termina;
         localStorage.setItem("ms", JSON.stringify(ms));
     }
-function clearms(){
-    if(confirm("Are you sure you want to clear messages?")){
-        bien = " exelent, good job ";
-        mal = " sorry, you are wrong ";
-        sigue = " good job, keep going";
-        nombre = "";
-        savems();
+    function clearms() {
+        if (confirm("Are you sure you want to clear messages?")) {
+            bien = " exelent, good job ";
+            mal = " sorry, you are wrong ";
+            sigue = " good job, keep going ";
+            termina = " great job... "
+            nombre = "";
+            savems();
+        }
     }
-}
 
     // setUpModeTest();
 </script>
