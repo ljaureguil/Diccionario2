@@ -117,6 +117,7 @@
     if (bkms != null && bkms != undefined) {
         ms = JSON.parse(bkms);
         bien = ms.bien; mal = ms.mal; sigue = ms.sigue; nombre = ms.nombre, termina = ms.termina;
+        if(ms.termina==undefined)ms.termina=" Great job... "
     }
     else localStorage.setItem("ms", JSON.stringify(ms));
 
@@ -144,10 +145,10 @@
         document.body.appendChild(s)
 
             ;
-        inic2()
+        inic()
     });
 
-    //eval(r);GetJson=GetJson;UpdateJson=UpdateJson;alert("ok")
+    
 
     // var linkd = "https://api.jsonblob.com/019a741c-2015-743a-a642-933fc22eeab7"
 
@@ -173,7 +174,7 @@
 
     }
 
-    function inic2() {
+    function inic() {
         GetJson(linkdicc, function (r) {
             words = r.words;
 
@@ -554,7 +555,8 @@
                 if (ngood >= this.parentElement.children.length) {
                     var nn = termina + "you have finish the test...:\n\nGoods: " + ngood + "\n\nWrong: " + (ngood - nresult) + "\n\nOver all result: " + nresult + "\n\n...The test dialoge will be close";
                     playtx(nn)
-                    alert(nn)
+                    alert(nn);
+                    ngood=0;nresult=0;
                     clos.click();
                 }
             }
@@ -608,6 +610,7 @@
                     var nn = termina + "you have finish the test...:\n\nGoods: " + ngood + "\n\nWrong: " + (ngood - nresult) + "\n\nOver all result: " + nresult + "\n\n...The test dialoge will be close";
                     playtx(nn)
                     alert(nn);
+                       ngood=0;nresult=0;                
                     clos.click();
                 }
 
