@@ -48,7 +48,8 @@
 
     <br>
     ..........................
-    <select id='sel' style='width:80%;' oninput='inw.value=this.value;find(this.value)'></select>
+    <select id='sel' style='width:80%;' oninput='inw.value=this.value;find(this.value)'
+        onclick="playtx('Select a word to show you the meaning')"></select>
     <button onclick='delw(sel.value)' style='width:auto;'>Del</button>
     .................
 
@@ -56,8 +57,9 @@
 
     <br><button onclick='aud.play()' style='font-size:10px;'>Play mp3</button>
     <button onclick='playtx(sel.value)' style='font-size:10px;'>Play TxTo Speech</button><br>
-    Add new Word . . . <input id='inw' oninput="this.value=this.value.toLowerCase()"></input> <button
-        onclick='addNewW(inw.value)' style='width:auto;'>Add it</button>
+    Add new Word . . . <input id='inw' oninput="this.value=this.value.toLowerCase()"
+        onclick="playtx('type a word to find it or add it')"></input> <button onclick='addNewW(inw.value)'
+        style='width:auto;'>Add it</button>
     <button onclick='find(inw.value)' style='width:auto;'>Find it</button>
     <button onclick='addOwnDef(inw.value)' style='width:auto;'>Add own def</button><br>
     <button onclick='busq.value=inw.value+" meaning";btnsrch.click()' style='width:auto;'>Search on google</button><br>
@@ -72,11 +74,13 @@
 
 
 
-    from<input id="ifrom" inputmode="numeric" style="width: 40%;"
+    from<input id="ifrom" inputmode="numeric" style="width: 40%;" onclick="playtx('set value '+this.placeholder)"
         oninput="if(this.value<=ar.length) from=this.value;else alert('too high')"></input>
-    <br>to<input id="ito" style="width: 40%;" inputmode="numeric"
+    <br>to<input id="ito" style="width: 40%;" inputmode="numeric" onclick="playtx('set value '+this.placeholder)"
         onchange="//if(this.value<=ifrom.value && this.value<ar.length) to=this.value;else alert('number to hi or les than from number');"></input>;
-    <br><button onclick="setArTest()">Set Up test</button>
+    <br><button
+        onclick="setArTest();playtx('Press word on your right and touch te definition at the left... get fun')">Set Up
+        test</button>
 
     <br>
 
@@ -110,6 +114,7 @@
 </div>
 
 <script>
+    playtx("Application made for personal dictionary...")
     var bien = " exelent, good job ", mal = " sorry, you are wrong ", sigue = " good job, keep going", nombre = "", termina = " Great job... ", ngood = 0, nresult = 0;
     var ms = {};
     ms.bien = bien; ms.mal = mal; ms.sigue = sigue; ms.nombre = nombre; ms.termina = termina;
@@ -200,7 +205,9 @@
 
             //    try {
             if (r[0] == null || r[0] == undefined) {
+                playtx("no data for word: " + f)
                 alert("no data for word: " + f);
+
                 // return;
             } else {
 
@@ -249,7 +256,7 @@
     }
 
 
-    playtx = function (t) {
+    function playtx(t) {
         const message = new SpeechSynthesisUtterance(t);
         //  message.lang = "es-MX"
         window.speechSynthesis.cancel()
@@ -265,8 +272,10 @@
             var sk = "";
             var ex = findInArd(w);
             if (words.indexOf(ex) > -1) {
+                playtx("word already exist... Do you want to sreplace it?");
                 alert("Word already exist");
-                playtx("word already exist");
+
+
                 if (!confirm("Do you want to sreplace it?")) return;
             }
             if (obtemp != undefined && obtemp.word == w) {
@@ -283,10 +292,11 @@
                 UpdateJson(linkdicc, {
                     words: words
                 }, function () {
-                    alert("word added: alfab..." + w);
+                    playtx(w + ", word has been added to dictionary")
+                    alert("word added:..." + w);
                     setUpSel(words);
                     sel.value = w;
-                    playtx("word added to dictionary in order alf")
+
                 });
 
 
@@ -317,8 +327,8 @@
     }
 
     function setUpSel2() {
-        ifrom.placeholder = "> 0 and < " + (words.length - 1);
-        ito.placeholder = "> from and <" + (words.length - 1) + " or ( -n ) for all random";
+        ifrom.placeholder = "more than 0 and less than " + (words.length - 1);
+        ito.placeholder = "less than " + (words.length - 1) + " and more than ifrom, or negative number for random";
         var s = "";
         for (var i = 0; i < words.length; i++) {
             s += "<option>" + words[i].word + "</option>";
@@ -344,14 +354,15 @@
         var wo = findInArd(w)
         if (wo !== null) {
 
-            alert(wo.word)
-
+            //  alert(wo.word)
+            playtx("Are you sure you want to delete '" + w + "'??")
             if (confirm("Are you sure you want to delete '" + w + "'??")) {
 
                 words.splice(words.indexOf(wo), 1);
                 UpdateJson(linkdicc, {
                     words: words
                 }, function () {
+                    playtx("Word " + w + " has been deleted")
                     alert("Word deleted: " + w);
                     setUpSel(words); // Refresh the dropdown
                 });
