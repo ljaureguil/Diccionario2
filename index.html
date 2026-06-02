@@ -57,11 +57,13 @@
 
     <br><button onclick='aud.play()' style='font-size:10px;'>Play mp3</button>
     <button onclick='playtx(sel.value)' style='font-size:10px;'>Play TxTo Speech</button><br>
-    Add new Word . . . <input id='inw' oninput="this.value=this.value.toLowerCase()"
-        onclick="//playtx('type a word to find it or add it')"></input> <button onclick='addNewW(inw.value)'
-        style='width:auto;'>Add it</button>
+    Add new Word . . . <input id='inw' oninput="this.value=this.value.toLowerCase();"
+        onclick="//playtx('type a word to find it or add it')"></input>
+         <button onclick='addNewW(inw.value)'
+        style='width:auto;'>Add it/Replace it</button>
     <button onclick='find(inw.value)' style='width:auto;'>Find it</button>
-    <button onclick='addOwnDef(inw.value)' style='width:auto;'>Add own def</button><br>
+    <button onclick='addOwnDef(inw.value)' style='width:auto;'>Add own def</button>
+    <button onclick='updateDef(inw.value)' style='width:auto;'>Update Definition literal</button><br>
     <button onclick='busq.value=inw.value+" meaning";btnsrch.click()' style='width:auto;'>Search on google</button><br>
     <div class="search-box" style="display: none;">
         <h1>Google Custom Search</h1>
@@ -113,6 +115,9 @@
 </div>
 
 <script>
+//if(this.value.charCodeAt(this.value.length-1)==13) find(inw.value);
+inw.addEventListener("keypress",function(e){if(e.keyCode==13) find(inw.value)})
+
     playtx("Application made for personal dictionary...")
     var bien = " exelent, good job ", mal = " sorry, you are wrong ", sigue = " good job, keep going", nombre = "", termina = " Great job... ", ngood = 0, nresult = 0;
     var ms = {};
@@ -192,7 +197,8 @@
     function find(f, callback) {
         for (var i = 0; i < words.length; i++) {
             if (words[i].word == f) {
-                textarea.value = f + ":\n\n" + words[i].definitions;//f + " meaning: " + 
+                textarea.value = f + ":\n\n" + words[i].definitions;
+                obtemp=words[i];
                 setTimeout(function () { playtx(textarea.value) }, 2000)
                 if (words[i].aud != "") aud.src = words[i].aud;
                 //  alert("kdkdkdk")
@@ -201,14 +207,9 @@
             }
         }
         GetJson(linkapi + f, function (r) {
-
-            //    try {
             if (r[0] == null || r[0] == undefined) {
                 playtx("no data for word: " + f)
-                alert("no data for word: " + f);
-
-                // return;
-            } else {
+             } else {
 
                 var ms = r[0].meanings[0].definitions;
                 var ss = "";
@@ -223,24 +224,23 @@
 
                 });
                 var m = ss //.definition
-
-                // textarea.value = m + "\n\n\n\n" + JSON.stringify(r).replace(/,/g, "\n").replace(/"/g, " ");
                 textarea.value = f + ": \n\n" + m;
                 playtx(textarea.value)
                 od.definitions = m;
-                //  alert(m)
+  
+                var a;
+                if (r[0].phonetics.length > 0) {
+                    a = r[0].phonetics[0].audio; 
+                }
 
-                var a = r[0].phonetics[0].audio; //JSON.stringify()
                 if (a != undefined) {
                     aud.src = a;
                     od.aud = a;
-                } else playtx(f);
-                /////////////////////////////////////////////////////
-                //  alert(JSON.stringify(od))
+                } else playtx(f); 
+  
                 obtemp = od;
+        
                 if (callback != undefined) callback(od)
-
-
             }
         });
     }
@@ -270,15 +270,18 @@
             words = r.words;
             var sk = "";
             var ex = findInArd(w);
+            var breplace = false;
             if (words.indexOf(ex) > -1) {
                 playtx("word already exist... Do you want to sreplace it?");
                 alert("Word already exist");
-
-
                 if (!confirm("Do you want to sreplace it?")) return;
-            }
+                breplace = true;
+            }   
             if (obtemp != undefined && obtemp.word == w) {
-                words.push(obtemp);
+                if(breplace){
+                      words.splice(words.indexOf(ex), 1, obtemp);                    
+                }
+                else  words.push(obtemp);
             }
             else {
                 find(w);
@@ -305,24 +308,32 @@
 
     }
 
-    addOwnDef = function (w) {
+    function updateDef(w) {
+        obtemp = definitions=textarea;
+       
+        var wo = findInArd(w)
+         wo.definitions = textarea.value;
+   
+        UpdateJson(linkdicc, {
+            words: words
+        }, function () {
+            playtx("Definition for " + w + " has been updated")
+            alert("Definition updated for: " + w);
+            setUpSel2(words); // Refresh the dropdown
+        });
+        localStorage.setItem("diccionario", JSON.stringify(words));
+      
+    }
+
+    function   addOwnDef(w) {
         var d = prompt("Enter your definition for '" + w + "':");
         if (d != null && d.trim() != "") {
-            var od = findInArd(w);
-            if (od != null) {
-                od.definitions += "\n\nYour definition: " + d;
-                UpdateJson(linkdicc, {
-                    words: words
-                }, function () {
-                    alert("Definition added to word: " + w);
-                    find(w); // Refresh the displayed definition
-                });
-            } else {
-                alert("Word not found in dictionary.");
-            }
-        } else {
-            alert("Definition cannot be empty.");
+obtemp.definitions += "\n\nYour definition: " + d;
+
+textarea.value = w+":\n\n" + obtemp.definitions;//f + " meaning: " + 
+                setTimeout(function () { playtx(textarea.value) }, 2000)
         }
+  
     }
 
     function setUpSel2() {
