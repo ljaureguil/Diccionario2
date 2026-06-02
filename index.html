@@ -49,7 +49,7 @@
     <br>
     ..........................
     <select id='sel' style='width:80%;' oninput='inw.value=this.value;find(this.value)'
-        onclick="playtx('Select a word to show you the meaning')"></select>
+        onclick="//playtx('Select a word to show you the meaning')"></select>
     <button onclick='delw(sel.value)' style='width:auto;'>Del</button>
     .................
 
@@ -58,7 +58,7 @@
     <br><button onclick='aud.play()' style='font-size:10px;'>Play mp3</button>
     <button onclick='playtx(sel.value)' style='font-size:10px;'>Play TxTo Speech</button><br>
     Add new Word . . . <input id='inw' oninput="this.value=this.value.toLowerCase()"
-        onclick="playtx('type a word to find it or add it')"></input> <button onclick='addNewW(inw.value)'
+        onclick="//playtx('type a word to find it or add it')"></input> <button onclick='addNewW(inw.value)'
         style='width:auto;'>Add it</button>
     <button onclick='find(inw.value)' style='width:auto;'>Find it</button>
     <button onclick='addOwnDef(inw.value)' style='width:auto;'>Add own def</button><br>
@@ -78,8 +78,7 @@
         oninput="if(this.value<=ar.length) from=this.value;else alert('too high')"></input>
     <br>to<input id="ito" style="width: 40%;" inputmode="numeric" onclick="playtx('set value '+this.placeholder)"
         onchange="//if(this.value<=ifrom.value && this.value<ar.length) to=this.value;else alert('number to hi or les than from number');"></input>;
-    <br><button
-        onclick="setArTest();playtx('Press word on your right and touch te definition at the left... get fun')">Set Up
+    <br><button onclick="setArTest();playtx('Press word on your right and choose definition at the left...')">Set Up
         test</button>
 
     <br>
@@ -294,7 +293,7 @@
                 }, function () {
                     playtx(w + ", word has been added to dictionary")
                     alert("word added:..." + w);
-                    setUpSel(words);
+                    setUpSel2(words);
                     sel.value = w;
 
                 });
@@ -364,7 +363,7 @@
                 }, function () {
                     playtx("Word " + w + " has been deleted")
                     alert("Word deleted: " + w);
-                    setUpSel(words); // Refresh the dropdown
+                    setUpSel2(words); // Refresh the dropdown
                 });
                 localStorage.setItem("diccionario", JSON.stringify(words));
 
