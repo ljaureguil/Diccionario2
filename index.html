@@ -55,11 +55,12 @@
 
     <br>
 
-    Add new Word . . . <input id='inw' oninput="this.value=this.value.toLowerCase();"
+   <button id="spword" onclick="find(this.innerHTML); this.style.background='none';inw.value=this.innerHTML;" style='background:none;'>  </button><br>
+   Type Word: <input id='inw' oninput="this.value=this.value.toLowerCase();var oc=getCloser(this.value);spword.innerHTML=oc.word;if(oc.local)spword.style.backgroundColor='#0a0';else spword.style.backgroundColor='#f00'" style='width:80%;'
         onclick="//playtx('type a word to find it or add it')"></input>
     <button onclick='addNewW(inw.value)' style='width:auto;'>Add it/Replace it</button>
     <button onclick='find(inw.value)' style='width:auto;'>Find it</button>
-    <button onclick='addOwnDef(inw.value)' style='width:auto;'>Add own def</button>
+    <button onclick='addOwnWord(inw.value)' style='width:auto;'>Add own word</button>
     <button onclick='updateDef(inw.value)' style='width:auto;'>Update Definition literal</button><br>
     <button onclick='busq.value=inw.value+" meaning";btnsrch.click()' style='width:auto;'>Search on google</button><br>
     <div class="search-box" style="display: none;">
@@ -312,7 +313,7 @@
         if (!confirm("Are you sure you want to update definitions literally?")) return;
         if (textarea.value.indexOf(w + ":") > -1) obtemp.definitions = textarea.value.split(w + ":")[1]
         // obtemp.definition = null;
-
+        if(index==-1){if(confirm("Do you want to add it as a new word?"))   return addNewW(w); else return;}
         alert(words[index].definitions)
 
         /*
@@ -330,14 +331,10 @@
 
     }
 
-    function addOwnDef(w) {
-        var d = prompt("Enter your definition for '" + w + "':");
-        if (d != null && d.trim() != "") {
-            obtemp.definitions += "\n\nYour definition: " + d;
-
-            textarea.value = w + ":\n\n" + obtemp.definitions;//f + " meaning: " + 
-            setTimeout(function () { playtx(textarea.value) }, 2000)
-        }
+    function addOwnWord(w) {
+        textarea.value = w + ":\n\n" + "Type your own definition here...";
+        obtemp = { word: w, definitions: "", aud: "" };
+        alert("This will add new word. Type your own definition in the textarea, once you finish press the 'Update Definition literal' button");
 
     }
 
@@ -671,7 +668,19 @@
         }
     }
 
+    function getCloser(s) {
+        var closer = s;
+        var minDist = Infinity;
+        for (var i = 0; i < words.length; i++) {
+            var w=words[i].word;
+            if(w.indexOf(s)===0)return {word: w,local:true};
+ 
+        }
+      //  return "Add new Word . . . (Did you mean: " + closer + " ?)";
+      return {word: closer,local:false};
+    }
+
     // setUpModeTest();
 </script>
 
-</html>
+</html>  
