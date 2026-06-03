@@ -45,22 +45,19 @@
 <div class="gcse-search"></div>
 
 <div id="todo">
-
-    <br>
-    ..........................
+    ..........................<br>
     <select id='sel' style='width:80%;' oninput='inw.value=this.value;find(this.value)'
         onclick="//playtx('Select a word to show you the meaning')"></select>
-    <button onclick='delw(sel.value)' style='width:auto;'>Del</button>
-    .................
+    <button onclick='delw(sel.value)' style='width:auto;'>Del</button><br>
+
+    <button onclick='aud.play()' style='font-size:10px;'>Play mp3</button> .................
+    <button onclick='playtx(sel.value)' style='font-size:10px;'>Play TxTo Speech</button><br>
 
     <br>
 
-    <br><button onclick='aud.play()' style='font-size:10px;'>Play mp3</button>
-    <button onclick='playtx(sel.value)' style='font-size:10px;'>Play TxTo Speech</button><br>
     Add new Word . . . <input id='inw' oninput="this.value=this.value.toLowerCase();"
         onclick="//playtx('type a word to find it or add it')"></input>
-         <button onclick='addNewW(inw.value)'
-        style='width:auto;'>Add it/Replace it</button>
+    <button onclick='addNewW(inw.value)' style='width:auto;'>Add it/Replace it</button>
     <button onclick='find(inw.value)' style='width:auto;'>Find it</button>
     <button onclick='addOwnDef(inw.value)' style='width:auto;'>Add own def</button>
     <button onclick='updateDef(inw.value)' style='width:auto;'>Update Definition literal</button><br>
@@ -115,8 +112,8 @@
 </div>
 
 <script>
-//if(this.value.charCodeAt(this.value.length-1)==13) find(inw.value);
-inw.addEventListener("keypress",function(e){if(e.keyCode==13) find(inw.value)})
+    //if(this.value.charCodeAt(this.value.length-1)==13) find(inw.value);
+    inw.addEventListener("keypress", function (e) { if (e.keyCode == 13) find(inw.value) })
 
     playtx("Application made for personal dictionary...")
     var bien = " exelent, good job ", mal = " sorry, you are wrong ", sigue = " good job, keep going", nombre = "", termina = " Great job... ", ngood = 0, nresult = 0;
@@ -198,7 +195,7 @@ inw.addEventListener("keypress",function(e){if(e.keyCode==13) find(inw.value)})
         for (var i = 0; i < words.length; i++) {
             if (words[i].word == f) {
                 textarea.value = f + ":\n\n" + words[i].definitions;
-                obtemp=words[i];
+                obtemp = words[i];
                 setTimeout(function () { playtx(textarea.value) }, 2000)
                 if (words[i].aud != "") aud.src = words[i].aud;
                 //  alert("kdkdkdk")
@@ -209,7 +206,7 @@ inw.addEventListener("keypress",function(e){if(e.keyCode==13) find(inw.value)})
         GetJson(linkapi + f, function (r) {
             if (r[0] == null || r[0] == undefined) {
                 playtx("no data for word: " + f)
-             } else {
+            } else {
 
                 var ms = r[0].meanings[0].definitions;
                 var ss = "";
@@ -227,19 +224,19 @@ inw.addEventListener("keypress",function(e){if(e.keyCode==13) find(inw.value)})
                 textarea.value = f + ": \n\n" + m;
                 playtx(textarea.value)
                 od.definitions = m;
-  
+
                 var a;
                 if (r[0].phonetics.length > 0) {
-                    a = r[0].phonetics[0].audio; 
+                    a = r[0].phonetics[0].audio;
                 }
 
                 if (a != undefined) {
                     aud.src = a;
                     od.aud = a;
-                } else playtx(f); 
-  
+                } else playtx(f);
+
                 obtemp = od;
-        
+
                 if (callback != undefined) callback(od)
             }
         });
@@ -276,12 +273,12 @@ inw.addEventListener("keypress",function(e){if(e.keyCode==13) find(inw.value)})
                 alert("Word already exist");
                 if (!confirm("Do you want to sreplace it?")) return;
                 breplace = true;
-            }   
+            }
             if (obtemp != undefined && obtemp.word == w) {
-                if(breplace){
-                      words.splice(words.indexOf(ex), 1, obtemp);                    
+                if (breplace) {
+                    words.splice(words.indexOf(ex), 1, obtemp);
                 }
-                else  words.push(obtemp);
+                else words.push(obtemp);
             }
             else {
                 find(w);
@@ -309,11 +306,19 @@ inw.addEventListener("keypress",function(e){if(e.keyCode==13) find(inw.value)})
     }
 
     function updateDef(w) {
-        obtemp = definitions=textarea;
-       
-        var wo = findInArd(w)
-         wo.definitions = textarea.value;
-   
+
+        var index = words.indexOf(obtemp)
+        alert(index)
+        if (!confirm("Are you sure you want to update definitions literally?")) return;
+        if (textarea.value.indexOf(w + ":") > -1) obtemp.definitions = textarea.value.split(w + ":")[1]
+        // obtemp.definition = null;
+
+        alert(words[index].definitions)
+
+        /*
+                var wo = findInArd(w)
+                wo.definitions = textarea.value;
+        */
         UpdateJson(linkdicc, {
             words: words
         }, function () {
@@ -322,18 +327,18 @@ inw.addEventListener("keypress",function(e){if(e.keyCode==13) find(inw.value)})
             setUpSel2(words); // Refresh the dropdown
         });
         localStorage.setItem("diccionario", JSON.stringify(words));
-      
+
     }
 
-    function   addOwnDef(w) {
+    function addOwnDef(w) {
         var d = prompt("Enter your definition for '" + w + "':");
         if (d != null && d.trim() != "") {
-obtemp.definitions += "\n\nYour definition: " + d;
+            obtemp.definitions += "\n\nYour definition: " + d;
 
-textarea.value = w+":\n\n" + obtemp.definitions;//f + " meaning: " + 
-                setTimeout(function () { playtx(textarea.value) }, 2000)
+            textarea.value = w + ":\n\n" + obtemp.definitions;//f + " meaning: " + 
+            setTimeout(function () { playtx(textarea.value) }, 2000)
         }
-  
+
     }
 
     function setUpSel2() {
