@@ -787,24 +787,64 @@ function chooseGroup(){
 
   
      }
-     function evalVocabulary(text) {
-      //  playtx("Checking vocabulary...");
-        var ss="";
-        two=text.split(" ")
-        var totalWords = two.length-1;
-        ss="Total words: " + totalWords + "\n\n";
-        var t=text,art=[];
-        for(var i=0;i<two.length;i++){
-            art.push(two[i]);
-            text=text.replace(/two[i]/g,"");
+         
+
+function evalVocabulary(t){
+    try{
+ t=t.trim();
+var r="";
+t=t.toLowerCase();
+var bt=t.replace(/,/g,"").replace(/\./g,"").replace(/  /g,"").replace(/\n/g,"");
+r="1) "+bt;
+
+var ar=t.split(" ");
+
+var nw=ar.length;
+
+var acur=[],tx=bt;//?
+var i=0;
+//for(var i=0;i<70;i++){//nw
+//tn=tx.split(" ").length;
+while(tx.split(" ").length>0){
+    i++;
+    if(i>ar.length){alert("break con i" + i); break;}//safety break
+var ow={};
+tx=tx.trim();
+var aw=tx.split(" ");
+var li=aw.length;
+//tx=" "+tx+" ";
+var w=aw[0];
+if(aw[0]==="")w=aw[1]
+ow.word=w;
+
+//tx.split(" ").length;
+tx=" "+tx+" ";
+var et='tx=tx.replace(/ '+w+' /g," ")';
+eval(et);
+tx=tx.trim();
+var lf=tx.split(" ").length;
+
+ ow.accuracy=li-lf
+
+acur.push(ow);
+if(lf==li){alert("break con lf==li");ow.accuracy=1; break;}//no more words
+if(lf<=0 || li<=0){alert("break con lf<=0 || li<=0"); break;}//no more words
+}
 
 
-        }
-        ss+=t;
+r="\n\nTotal de palabras: "+nw+"\npalabras: "+acur.length+"\n"+JSON.stringify(acur).replace(/,/g,"\n").replace(/\{/g,"\n").replace(/\}/g,"").replace(/\]/g,"\n").replace(/\[/g,"\n").replace(/"/g," ")+"\n\n"+tx;
+//alert("Total de palabras: "+nw+"\n"+JSON.stringify(acur).replace(/,/g,"\n"));
+textarea.value+=r;
+//return r;
+}
+catch{
+    alert("An error occurred while checking vocabulary. Please make sure to input valid text.");
+}
 
-           alert(ss);
-    }
-     
+}
+
+
+
 
 
 </script>
