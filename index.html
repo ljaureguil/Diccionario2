@@ -40,6 +40,10 @@
     #btne:hover {
         transform: scale(3);
     }
+ #btnb:hover {
+        transform: scale(3);
+    }
+
 </style>
 <script async src="https://google.com"></script>
 <div class="gcse-search"></div>
@@ -60,11 +64,23 @@
     Type Word: <input id='inw'
         oninput="this.value=this.value.toLowerCase();var oc=getCloser(this.value);spword.innerHTML=oc.word;if(oc.local)spword.style.backgroundColor='#0a0';else spword.style.backgroundColor='#f00'"
         style='width:80%;' onclick="//playtx('type a word to find it or add it')"></input>
-    <button onclick='addNewW(inw.value)' style='width:auto;'>Add it/Replace it</button>
-    <button onclick='find(inw.value)' style='width:auto;'>Find it</button>
-    <button onclick='addOwnWord(inw.value)' style='width:auto;'>Add own word</button>
-    <button onclick='updateDef(inw.value)' style='width:auto;'>Update Definition literal</button><br>
-    <button onclick='busq.value=inw.value+" meaning";btnsrch.click()' style='width:auto;'>Search on google</button><br>
+<br>Choose an action...
+<select id="saccion" oninput="action(this.value)" style="width:80%;">
+    <option value="">Select an action</option>
+<option>Find</option>
+<option>Add</option>
+<option>Update definition</option>
+<option>Search on google</option>
+<option>Add own word</option>
+<option>Choose a group for test</option>
+<option>Set up test</option>
+<option>Clear textarea</option>
+<option>Check Vocabulary</option>
+
+
+</select>
+<button onclick="action(saccion.value)">Go</button>
+<br>
     <div class="search-box" style="display: none;">
         <h1>Google Custom Search</h1>
         <form action="https://www.google.com/search" method="GET" target="_blank">
@@ -79,8 +95,8 @@
     from<input id="ifrom" inputmode="numeric" style="width: 40%;" onclick="playtx('set value '+this.placeholder)"
         oninput="if(this.value<=ar.length) from=this.value;else alert('too high')"></input>
     <br>to<input id="ito" style="width: 40%;" inputmode="numeric" onclick="playtx('set value '+this.placeholder)"
-        onchange="//if(this.value<=ifrom.value && this.value<ar.length) to=this.value;else alert('number to hi or les than from number');"></input>;
-    <br><button onclick="setArTest();playtx('Press word on your right and choose definition at the left...')">Set Up
+        onchange="//if(this.value<=ifrom.value && this.value<ar.length) to=this.value;else alert('number to hi or les than from number');"></input>
+    <button onclick="setArTest();playtx('Press word on your right and choose definition at the left...')">Set Up
         test</button>
 
     <br>
@@ -93,7 +109,7 @@
     <br><br>
     <br><br>
     <div id="testcontainer"
-        style=";border-style:solid;padding:3px;border=style:solid;width:97%;height:80%;text-align:center;font-size:10px;overflow:auto;background:rgba(33, 238, 221, 1);position:absolute;top: 10%;;display:none;">
+        style="border-style:solid;padding:3px;border=style:solid;width:97%;height:80%;text-align:center;font-size:10px;overflow:auto;background:rgba(33, 238, 221, 1);position:absolute;top: 10%;;display:none;">
         <div id="dt"
             style="border-style:solid;border-radius:10px;width:50%;height:90%;overflow:auto;font-size:10px;top:00%;position: absolute;left:0%;background:rgba(255,255,255,0.5);">
         </div>
@@ -110,12 +126,15 @@
     <button id="btne" onclick="eval(textarea.value);playtx('the data has been evaluated');"
         style="width:25px;height:25px;border-radius:100%;background:#f00;color:white;position:absolute;bottom:3%;right:3%;font-size:45px;transition: all 0.3s ease;">
     </button>
-
+   <button id="btnb" onclick="playtx('Checking vocabulary...');evalVocabulary(textarea.value);//playtx('the data has been evaluated');"
+        style="width:25px;height:25px;border-radius:100%;background:#00f;color:white;position:absolute;bottom:3%;left:3%;font-size:45px;transition: all 0.3s ease;">
+    </button>
 
 </div>
 
 <script>
     //if(this.value.charCodeAt(this.value.length-1)==13) find(inw.value);
+    var chgroup=false,grouptest=[];
     inw.addEventListener("keypress", function (e) { if (e.keyCode == 13) find(inw.value) })
 
     playtx("Application made for personal dictionary...")
@@ -195,6 +214,9 @@
 
 
     function find(f, callback) {
+
+     
+
         for (var i = 0; i < words.length; i++) {
             if (words[i].word == f) {
                 textarea.value = f + ":\n\n" + words[i].definitions;
@@ -244,6 +266,8 @@
             }
         });
     }
+    
+   
 
     function findInArd(w) {
         for (var i = 0; i < words.length; i++) {
@@ -470,6 +494,8 @@
 
 
         var ii = 0//ifrom.value;
+
+        ///////////////
         for (var i = ifrom.value * 1; i < ito.value * 1; i++) {
             var els = crw(words[i]);
             arw.push(els.bword);
@@ -480,6 +506,8 @@
             ii++
 
         }
+
+        /////
         arww.sort(() => Math.random() - .5)
         ardd.sort(() => Math.random() - .5)
 
@@ -513,13 +541,18 @@
 
     setArTest = function () {
         var nwords = words.slice();
+        if(chgroup){
+            nwords=grouptest;
+
+        }
+      
         if (ifrom.value === "") ifrom.value = 0;
         //  if(ito.value<0)ito.value=words.length;
         if (ito.value === "") {
             if (confirm("Set range first ('OK'), or use default ('Cancel')")) return;
             else {
                 ifrom.value = 0;
-                ito.value = words.length;
+                ito.value = nwords.length;
             }
         }
         if (ito.value < 0) {
@@ -546,6 +579,10 @@
             dw.appendChild(arw[i]);
             dt.appendChild(ard[i]);
         }
+        chgroup=false;
+         grouptest=[];
+         ito.value="";
+         ifrom.value="";
     }
 
     function crw(w) {
@@ -693,7 +730,94 @@
         return { word: closer, local: false };
     }
 
-    // setUpModeTest();
+    function action(a) {
+        if (a == "Find") find(inw.value);
+        else if (a == "Add") addNewW(inw.value);
+        else if (a == "Update definition") updateDef(inw.value);
+        else if (a == "Search on google") busq.value = inw.value + " meaning", btnsrch.click();
+        else if (a == "Add own word") addOwnWord(inw.value);
+        else if (a == "Choose a group for test") chooseGroup();
+        else if (a == "Set up test") setArTest();
+        else if (a == "Clear textarea") textarea.value = "";
+        else if (a == "Clear messages") clearms();
+        else if (a == "Check Vocabulary") {
+           
+            playtx("Type or paste a paragraph in the textarea, then press 'Play' button to check your vocabulary. The application will read the text and show you the meaning of each word if it is in your dictionary. This is a great way to learn new words and reinforce your memory. Give it a try!");
+        }
+     
+    }
+   
+function chooseGroup(){
+ 
+    chgroup=true;
+     testcontainer.style.display = 'block';
+     dt.innerHTML = "";
+     dw.innerHTML = "";
+     var s="";
+     for(var i=0;i<words.length;i++){
+        w=words[i];
+    tw = document.createElement("button"); 
+     dw.appendChild(tw);
+        tw.innerHTML = w.word;
+        tw.name = w;
+        tw.ew=w;
+        tw.style = "width:90%;height:auto;font-size:18px;margin:25px;" +
+            " box-shadow: rgba(50, 50, 93, 0.925) 0px 10px 30px -10px, rgba(0, 0, 0, 0.93) 0px 10px 30px -10px; ";
+        tw.onclick = function () {
+            playtx(this.name);
+
+            var ae = dw.children;
+
+            for (var i = 0; i < ae.length; i++) {
+                ae[i].style.color = "white";
+                ae[i].style.background = "#0088ff";
+                ae[i].style.scale = "1 1"
+            }
+            grouptest.push(this.ew);
+            this.style.color = "black"
+            this.style.background = "white";
+            this.style.opacity = .42;
+          
+
+       //     alert(grouptest.length);
+
+        }
+
+    }
+
+  
+     }
+     function evalVocabulary(text) {
+      //  playtx("Checking vocabulary...");
+        var ss="";
+        two=text.split(" ")
+        var totalWords = two.length-1;
+        ss="Total words: " + totalWords + "\n\n";
+        var t=text,art=[];
+        for(var i=0;i<two.length;i++){
+            art.push(two[i]);
+            text=text.replace(/two[i]/g,"");
+
+
+        }
+        ss+=t;
+
+           alert(ss);
+    }
+     
+
+
+</script>
+<script>
+`
+    <button onclick='addNewW(inw.value)' style='width:auto;'>Add it/Replace it</button>
+    <button onclick='find(inw.value)' style='width:auto;'>Find it</button>
+    <button onclick='addOwnWord(inw.value)' style='width:auto;'>Add own word</button>
+    <button onclick='updateDef(inw.value)' style='width:auto;'>Update Definition literal</button><br>
+    <button onclick='busq.value=inw.value+" meaning";btnsrch.click()' style='width:auto;'>Search on google</button>
+
+`
+
 </script>
 
 </html>
