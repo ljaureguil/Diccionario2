@@ -40,17 +40,17 @@
     #btne:hover {
         transform: scale(3);
     }
- #btnb:hover {
+
+    #btnb:hover {
         transform: scale(3);
     }
-
 </style>
 <script async src="https://google.com"></script>
 <div class="gcse-search"></div>
 
 <div id="todo">
     ..........................<br>
-    <select id='sel' style='width:80%;' oninput='inw.value=this.value;find(this.value)'
+    <select id='sel' style='width:80%;background-color: aqua;' oninput='inw.value=this.value;find(this.value)'
         onclick="//playtx('Select a word to show you the meaning')"></select>
     <button onclick='delw(sel.value)' style='width:auto;'>Del</button><br>
 
@@ -64,23 +64,23 @@
     Type Word: <input id='inw'
         oninput="this.value=this.value.toLowerCase();var oc=getCloser(this.value);spword.innerHTML=oc.word;if(oc.local)spword.style.backgroundColor='#0a0';else spword.style.backgroundColor='#f00'"
         style='width:80%;' onclick="//playtx('type a word to find it or add it')"></input>
-<br>Choose an action...
-<select id="saccion" oninput="action(this.value)" style="width:80%;">
-    <option value="">Select an action</option>
-<option>Find</option>
-<option>Add</option>
-<option>Update definition</option>
-<option>Search on google</option>
-<option>Add own word</option>
-<option>Choose a group for test</option>
-<option>Set up test</option>
-<option>Clear textarea</option>
-<option>Check Vocabulary</option>
+    <br>Choose an action...
+    <select id="saccion" oninput="action(this.value)" style="width:80%;background-color:aqua;">
+        <option value="">Select an action</option>
+        <option>Find</option>
+        <option>Add</option>
+        <option>Update definition</option>
+        <option>Search on google</option>
+        <option>Add own word</option>
+        <option>Choose a group for test</option>
+        <option>Set up test</option>
+        <option>Clear textarea</option>
+        <option>Check Vocabulary</option>
 
 
-</select>
-<button onclick="action(saccion.value)">Go</button>
-<br>
+    </select>
+    <button onclick="action(saccion.value)">Go</button>
+    <br>
     <div class="search-box" style="display: none;">
         <h1>Google Custom Search</h1>
         <form action="https://www.google.com/search" method="GET" target="_blank">
@@ -119,14 +119,15 @@
         <p id="psel"
             style="position: absolute; bottom: 10px; right:10%;font-size:20px;color:red;font-weight: bold;transition: font-size 0.3s ease;">
         </p>
-        <button id="clos" onclick="testcontainer.style.display='none';"
+        <button id="clos" onclick="testcontainer.style.display='none';ngood=0;nresult=0;"
             style="position: absolute; bottom: 2px; right: 10px;width:95%">Close</button>
 
     </div>
     <button id="btne" onclick="eval(textarea.value);playtx('the data has been evaluated');"
         style="width:25px;height:25px;border-radius:100%;background:#f00;color:white;position:absolute;bottom:3%;right:3%;font-size:45px;transition: all 0.3s ease;">
     </button>
-   <button id="btnb" onclick="playtx('Checking vocabulary...');evalVocabulary(textarea.value);//playtx('the data has been evaluated');"
+    <button id="btnb"
+        onclick="playtx('Checking vocabulary...');evalVocabulary(textarea.value);//playtx('the data has been evaluated');"
         style="width:25px;height:25px;border-radius:100%;background:#00f;color:white;position:absolute;bottom:3%;left:3%;font-size:45px;transition: all 0.3s ease;">
     </button>
 
@@ -134,7 +135,7 @@
 
 <script>
     //if(this.value.charCodeAt(this.value.length-1)==13) find(inw.value);
-    var chgroup=false,grouptest=[];
+    var chgroup = false, argroup = [], selgr = false, grouptest = [];
     inw.addEventListener("keypress", function (e) { if (e.keyCode == 13) find(inw.value) })
 
     playtx("Application made for personal dictionary...")
@@ -215,7 +216,11 @@
 
     function find(f, callback) {
 
-     
+        if (selgr) {
+            argroup.push(findInArd(f));
+            playtx(f + "... you have selected " + argroup.length + " words so far")
+            return;
+        }
 
         for (var i = 0; i < words.length; i++) {
             if (words[i].word == f) {
@@ -266,8 +271,8 @@
             }
         });
     }
-    
-   
+
+
 
     function findInArd(w) {
         for (var i = 0; i < words.length; i++) {
@@ -474,55 +479,6 @@
         return [w, ss]
     }
 
-    setArTest2 = function () {
-        var tt = ito.value;
-        if (ifrom.value === "") ifrom.value = 0;
-        //  if(ito.value<0)ito.value=words.length;
-        if (ito.value === "") {
-            if (confirm("Set range first ('OK'), or use default ('Cancel')")) return;
-            else {
-                ifrom.value = 0;
-                ito.value = words.length;
-            }
-        }
-        if (tt < 0) ito.value = words.length;
-        testcontainer.style.display = 'block';
-
-        dt.innerHTML = "";
-        dw.innerHTML = "";
-        arw = [], ard = [], arww = [], ardd = [];
-
-
-        var ii = 0//ifrom.value;
-
-        ///////////////
-        for (var i = ifrom.value * 1; i < ito.value * 1; i++) {
-            var els = crw(words[i]);
-            arw.push(els.bword);
-            ard.push(els.def);
-
-            arww.push(ii);
-            ardd.push(ii);
-            ii++
-
-        }
-
-        /////
-        arww.sort(() => Math.random() - .5)
-        ardd.sort(() => Math.random() - .5)
-
-        var li = arw.length;
-
-        if (tt < 0) li = tt * -1;
-
-        for (var i = 0; i < li; i++) {
-            dw.appendChild(arw[arww[i]]);
-            dt.appendChild(ard[ardd[i]]);
-
-
-        }
-
-    }
     function shuffleArray2(array) {
         var temparray = array.slice(); // Create a copy of the original array
         for (let i = temparray.length - 1; i > 0; i--) {
@@ -540,16 +496,19 @@
     }
 
     setArTest = function () {
-        var nwords = words.slice();
-        if(chgroup){
-            nwords=grouptest;
-
+        var nwords;
+        var msg = "Set range first ('OK'), or use default ('Cancel')"
+        if (selgr) {
+            nwords = argroup;//grouptest;
+            msg = "Ok, you have selected a group of " + nwords.length + " words, select 'Cancel' option to continue"
         }
-      
+        else nwords = words.slice();
+
         if (ifrom.value === "") ifrom.value = 0;
         //  if(ito.value<0)ito.value=words.length;
         if (ito.value === "") {
-            if (confirm("Set range first ('OK'), or use default ('Cancel')")) return;
+            playtx(msg)
+            if (confirm(msg)) return;
             else {
                 ifrom.value = 0;
                 ito.value = nwords.length;
@@ -579,10 +538,11 @@
             dw.appendChild(arw[i]);
             dt.appendChild(ard[i]);
         }
-        chgroup=false;
-         grouptest=[];
-         ito.value="";
-         ifrom.value="";
+        selgr = false;
+        argroup = [];
+
+        ito.value = "";
+        ifrom.value = "";
     }
 
     function crw(w) {
@@ -731,6 +691,7 @@
     }
 
     function action(a) {
+        playtx(a);
         if (a == "Find") find(inw.value);
         else if (a == "Add") addNewW(inw.value);
         else if (a == "Update definition") updateDef(inw.value);
@@ -741,107 +702,74 @@
         else if (a == "Clear textarea") textarea.value = "";
         else if (a == "Clear messages") clearms();
         else if (a == "Check Vocabulary") {
-           
+
             playtx("Type or paste a paragraph in the textarea, then press 'Play' button to check your vocabulary. The application will read the text and show you the meaning of each word if it is in your dictionary. This is a great way to learn new words and reinforce your memory. Give it a try!");
         }
-     
+
     }
-   
-function chooseGroup(){
- 
-    chgroup=true;
-     testcontainer.style.display = 'block';
-     dt.innerHTML = "";
-     dw.innerHTML = "";
-     var s="";
-     for(var i=0;i<words.length;i++){
-        w=words[i];
-    tw = document.createElement("button"); 
-     dw.appendChild(tw);
-        tw.innerHTML = w.word;
-        tw.name = w;
-        tw.ew=w;
-        tw.style = "width:90%;height:auto;font-size:18px;margin:25px;" +
-            " box-shadow: rgba(50, 50, 93, 0.925) 0px 10px 30px -10px, rgba(0, 0, 0, 0.93) 0px 10px 30px -10px; ";
-        tw.onclick = function () {
-            playtx(this.name);
 
-            var ae = dw.children;
+    function chooseGroup() {
 
-            for (var i = 0; i < ae.length; i++) {
-                ae[i].style.color = "white";
-                ae[i].style.background = "#0088ff";
-                ae[i].style.scale = "1 1"
+        //  chgroup = true;
+        selgr = true;
+        playtx("Choose a set of words from the drop down list, when you are ready choose from action 'set Up Test'");
+        alert("Choose a set of words from the drop down list, when you are ready choose from action 'set Up Test'");
+
+    }
+
+    function evalVocabulary(t) {
+        try {
+            t = t.trim();
+            var r = "";
+            t = t.toLowerCase();
+            var bt = t.replace(/,/g, "").replace(/\./g, "").replace(/  /g, "").replace(/\n/g, "");
+            r = "1) " + bt;
+
+            var ar = t.split(" ");
+
+            var nw = ar.length;
+
+            var acur = [], tx = bt;//?
+            var i = 0;
+            //for(var i=0;i<70;i++){//nw
+            //tn=tx.split(" ").length;
+            while (tx.split(" ").length > 0) {
+                i++;
+                if (i > ar.length) { alert("break con i" + i); break; }//safety break
+                var ow = {};
+                tx = tx.trim();
+                var aw = tx.split(" ");
+                var li = aw.length;
+                //tx=" "+tx+" ";
+                var w = aw[0];
+                if (aw[0] === "") w = aw[1]
+                ow.word = w;
+
+                //tx.split(" ").length;
+                tx = " " + tx + " ";
+                var et = 'tx=tx.replace(/ ' + w + ' /g," ")';
+                eval(et);
+                tx = tx.trim();
+                var lf = tx.split(" ").length;
+
+                ow.accuracy = li - lf
+
+                acur.push(ow);
+                if (lf == li) { alert("break con lf==li"); ow.accuracy = 1; break; }//no more words
+                if (lf <= 0 || li <= 0) { alert("break con lf<=0 || li<=0"); break; }//no more words
             }
-            grouptest.push(this.ew);
-            this.style.color = "black"
-            this.style.background = "white";
-            this.style.opacity = .42;
-          
 
-       //     alert(grouptest.length);
 
+            r = "\n\nTotal de palabras: " + nw + "\npalabras: " + acur.length + "\n" + JSON.stringify(acur).replace(/,/g, "\n").replace(/\{/g, "\n").replace(/\}/g, "").replace(/\]/g, "\n").replace(/\[/g, "\n").replace(/"/g, " ") + "\n\n" + tx;
+            //alert("Total de palabras: "+nw+"\n"+JSON.stringify(acur).replace(/,/g,"\n"));
+            textarea.value += r;
+            //return r;
+        }
+        catch {
+            alert("An error occurred while checking vocabulary. Please make sure to input valid text.");
         }
 
     }
-
-  
-     }
-         
-
-function evalVocabulary(t){
-    try{
- t=t.trim();
-var r="";
-t=t.toLowerCase();
-var bt=t.replace(/,/g,"").replace(/\./g,"").replace(/  /g,"").replace(/\n/g,"");
-r="1) "+bt;
-
-var ar=t.split(" ");
-
-var nw=ar.length;
-
-var acur=[],tx=bt;//?
-var i=0;
-//for(var i=0;i<70;i++){//nw
-//tn=tx.split(" ").length;
-while(tx.split(" ").length>0){
-    i++;
-    if(i>ar.length){alert("break con i" + i); break;}//safety break
-var ow={};
-tx=tx.trim();
-var aw=tx.split(" ");
-var li=aw.length;
-//tx=" "+tx+" ";
-var w=aw[0];
-if(aw[0]==="")w=aw[1]
-ow.word=w;
-
-//tx.split(" ").length;
-tx=" "+tx+" ";
-var et='tx=tx.replace(/ '+w+' /g," ")';
-eval(et);
-tx=tx.trim();
-var lf=tx.split(" ").length;
-
- ow.accuracy=li-lf
-
-acur.push(ow);
-if(lf==li){alert("break con lf==li");ow.accuracy=1; break;}//no more words
-if(lf<=0 || li<=0){alert("break con lf<=0 || li<=0"); break;}//no more words
-}
-
-
-r="\n\nTotal de palabras: "+nw+"\npalabras: "+acur.length+"\n"+JSON.stringify(acur).replace(/,/g,"\n").replace(/\{/g,"\n").replace(/\}/g,"").replace(/\]/g,"\n").replace(/\[/g,"\n").replace(/"/g," ")+"\n\n"+tx;
-//alert("Total de palabras: "+nw+"\n"+JSON.stringify(acur).replace(/,/g,"\n"));
-textarea.value+=r;
-//return r;
-}
-catch{
-    alert("An error occurred while checking vocabulary. Please make sure to input valid text.");
-}
-
-}
 
 
 
@@ -849,7 +777,7 @@ catch{
 
 </script>
 <script>
-`
+    `
     <button onclick='addNewW(inw.value)' style='width:auto;'>Add it/Replace it</button>
     <button onclick='find(inw.value)' style='width:auto;'>Find it</button>
     <button onclick='addOwnWord(inw.value)' style='width:auto;'>Add own word</button>
