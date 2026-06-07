@@ -710,7 +710,7 @@
         if (a == "Find") find(inw.value);
         else if (a == "Add") addNewW(inw.value);
         else if (a == "Update definition") updateDef(inw.value);
-        else if (a == "Search on google") busq.value = inw.value + " meaning", btnsrch.click();
+        else if (a == "Search on google") busq.value = "meaning and sentence with word " + inw.value, btnsrch.click();//inw.value + " meaning", btnsrch.click();
         else if (a == "Add own word") addOwnWord(inw.value);
         else if (a == "Choose a group for test") chooseGroup();
         else if (a == "Set up test") setArTest();
