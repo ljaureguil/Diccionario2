@@ -76,6 +76,7 @@
         <option>Set up test</option>
         <option>Clear textarea</option>
         <option>Check Vocabulary</option>
+        <option>Save paragraph</option>
 
 
     </select>
@@ -135,7 +136,8 @@
 
 <script>
     //if(this.value.charCodeAt(this.value.length-1)==13) find(inw.value);
-    var chgroup = false, argroup = [], selgr = false, grouptest = [];
+    var argroup = [], selgr = false, paragraphs = [];
+
     inw.addEventListener("keypress", function (e) { if (e.keyCode == 13) find(inw.value) })
 
     playtx("Application made for personal dictionary...")
@@ -217,7 +219,9 @@
     function find(f, callback) {
 
         if (selgr) {
-            argroup.push(findInArd(f));
+            var wi = findInArd(f)
+            if (argroup.indexOf(wi) == -1) argroup.push(wi);
+            else { playtx("Word already added..."); alert("Word already added..."); return; }
             playtx(f + "... you have selected " + argroup.length + " words so far")
             return;
         }
@@ -375,6 +379,15 @@
         var s = "";
         for (var i = 0; i < words.length; i++) {
             s += "<option>" + words[i].word + "</option>";
+            var k = words[i].definitions;
+            if (Array.isArray(k)) {
+                alert(JSON.stringify(k));
+                var sk = k.toString().replace(/\n,/g, "\n")
+                //   alert(sk);
+                words[i].definitions = sk;
+
+
+            }
         }
         sel.innerHTML = s;
 
@@ -547,6 +560,8 @@
 
     function crw(w) {
         var d = w.definitions;
+        if (d.indexOf(d + ":") > -1) alert(w.word)
+        //    d.replace(/" + w.word + ":/g, '')
 
         var ta = document.createElement("textarea");
         ta.value = d;
@@ -702,9 +717,10 @@
         else if (a == "Clear textarea") textarea.value = "";
         else if (a == "Clear messages") clearms();
         else if (a == "Check Vocabulary") {
-
             playtx("Type or paste a paragraph in the textarea, then press 'Play' button to check your vocabulary. The application will read the text and show you the meaning of each word if it is in your dictionary. This is a great way to learn new words and reinforce your memory. Give it a try!");
-        }
+        };
+        if (a === "Save paragraph") saveParagraph()
+        if (a === "Load paragraph") loadParagraph();
 
     }
 
@@ -712,7 +728,7 @@
 
         //  chgroup = true;
         selgr = true;
-        playtx("Choose a set of words from the drop down list, when you are ready choose from action 'set Up Test'");
+        playtx("Choose a set of words from the drop down list, when you are ready press 'set Up Test' button");
         alert("Choose a set of words from the drop down list, when you are ready choose from action 'set Up Test'");
 
     }
@@ -722,7 +738,7 @@
             t = t.trim();
             var r = "";
             t = t.toLowerCase();
-            var bt = t.replace(/,/g, "").replace(/\./g, "").replace(/  /g, "").replace(/\n/g, "");
+            var bt = t.replace(/,/g, "").replace(/\./g, "").replace(/  /g, "").replace(/\n/g, " ").replace(/;/g, "").replace(/:/g, "");
             r = "1) " + bt;
 
             var ar = t.split(" ");
@@ -755,23 +771,30 @@
                 ow.accuracy = li - lf
 
                 acur.push(ow);
-                if (lf == li) { alert("break con lf==li"); ow.accuracy = 1; break; }//no more words
+                if (lf == li) { /*alert("break con lf==li");*/ ow.accuracy = 1; break; }//no more words
                 if (lf <= 0 || li <= 0) { alert("break con lf<=0 || li<=0"); break; }//no more words
             }
 
-
-            r = "\n\nTotal de palabras: " + nw + "\npalabras: " + acur.length + "\n" + JSON.stringify(acur).replace(/,/g, "\n").replace(/\{/g, "\n").replace(/\}/g, "").replace(/\]/g, "\n").replace(/\[/g, "\n").replace(/"/g, " ") + "\n\n" + tx;
-            //alert("Total de palabras: "+nw+"\n"+JSON.stringify(acur).replace(/,/g,"\n"));
+            acur.sort((a, b) => b.accuracy - a.accuracy);
+            var chr = String.fromCharCode(8)
+            r = "\n\nTotal de palabras: " + nw + "\npalabras: " + acur.length + "\n" +
+                JSON.stringify(acur).replace(/,/g, "\n").replace(/\{/g, "\n").replace(/\}/g, "").replace(/\]/g, "\n").replace(/\[/g, "\n").replace(/"/g, " ") + "\n\n" + tx;
+            r = r.replace(/\n accuracy :/g, "...")
             textarea.value += r;
-            //return r;
         }
-        catch {
-            alert("An error occurred while checking vocabulary. Please make sure to input valid text.");
+        catch (e) {
+            alert(e + "\n\nAn error occurred while checking vocabulary. Please make sure to input valid text.");
         }
 
     }
 
+    function loadParagraph() {
+        playtx("still working on...");
 
+    }
+    function saveParagraph() {
+        playtx("still working on...");
+    }
 
 
 
